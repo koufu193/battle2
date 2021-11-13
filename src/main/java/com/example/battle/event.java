@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class event implements Listener {
@@ -22,6 +23,11 @@ public class event implements Listener {
             e.getPlayer().setPlayerListName(color+e.getPlayer().getPlayerListName()+ChatColor.RESET);
             e.getPlayer().setDisplayName(color+e.getPlayer().getDisplayName()+ChatColor.RESET);
             this.battle.scoreboard.getTeam(color==ChatColor.RED?"red":"blue").addPlayer(e.getPlayer());
+            if (color==ChatColor.RED) {
+                battle.redteam.add(e.getPlayer());
+            } else if (color==ChatColor.BLUE){
+                battle.blueteam.add(e.getPlayer());
+            }
         }
     }
     @EventHandler
