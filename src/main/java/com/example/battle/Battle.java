@@ -30,6 +30,9 @@ public final class Battle extends JavaPlugin {
     Location diamond;
     Location iron;
     Location gold;
+
+    Location redSpawn;
+    Location blueSpawn;
     @Override
     public void onEnable() {
         isStop=false;
@@ -45,6 +48,8 @@ public final class Battle extends JavaPlugin {
         diamond = util.getlocationbyconfig(config,"locations.diamond",Bukkit.getWorld("world"));
         iron = util.getlocationbyconfig(config,"locations.iron",Bukkit.getWorld("world"));
         gold = util.getlocationbyconfig(config,"locations.gold",Bukkit.getWorld("world"));
+        blueSpawn=util.getlocationbyconfig(config,"locations.blueLocation",Bukkit.getWorld("world"));
+        redSpawn=util.getlocationbyconfig(config,"locations.redLocation",Bukkit.getWorld("world"));
         for (String name:config.getStringList("players.red")) {
             redteam.add((Player) Bukkit.getOfflinePlayer(UUID.fromString(name)));
         }

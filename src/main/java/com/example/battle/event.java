@@ -20,16 +20,7 @@ public class event implements Listener {
     @EventHandler
     public void JoinEvent(PlayerJoinEvent e){
         if(!this.battle.playerData.containsKey(e.getPlayer().getUniqueId().toString())){
-            ChatColor color=getColor();
-            this.battle.playerData.put(e.getPlayer().getUniqueId().toString(),color);
-            e.getPlayer().setPlayerListName(color+e.getPlayer().getPlayerListName()+ChatColor.RESET);
-            e.getPlayer().setDisplayName(color+e.getPlayer().getDisplayName()+ChatColor.RESET);
-            this.battle.scoreboard.getTeam(color==ChatColor.RED?"red":"blue").addPlayer(e.getPlayer());
-            if (color==ChatColor.RED) {
-                battle.redteam.add(e.getPlayer());
-            } else if (color==ChatColor.BLUE){
-                battle.blueteam.add(e.getPlayer());
-            }
+            this.battle.util.addPlayer(e.getPlayer(),getColor());
         }
     }
     @EventHandler

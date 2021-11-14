@@ -18,7 +18,7 @@ Locations:
     x: 0
     y: 0
     z: 0
-    #赤のスポーン場所
+  #赤のスポーン場所
   redLocation:
     x: 0
     y: 0
@@ -27,7 +27,7 @@ Locations:
   blueLocation:
     x: 0
     y: 0
-    z:   0
+    z: 0
 players:
   red:
   blue:
