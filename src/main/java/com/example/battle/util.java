@@ -1,11 +1,10 @@
 package com.example.battle;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
+import org.bukkit.*;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
+import java.lang.reflect.WildcardType;
 
 public class util {
     Battle battle;
@@ -30,5 +29,12 @@ public class util {
             }
         }
         f.delete();
+    }
+
+    public Location getlocationbyconfig(FileConfiguration config, String path, World world) {
+        double x = config.getDouble(path+".x");
+        double y = config.getDouble(path+".y");
+        double z = config.getDouble(path+".z");
+        return new Location(world,x,y,z);
     }
 }

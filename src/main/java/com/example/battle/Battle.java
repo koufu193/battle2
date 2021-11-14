@@ -27,6 +27,9 @@ public final class Battle extends JavaPlugin {
     ArrayList<Player> redteam = new ArrayList<>();
     ArrayList<Player> blueteam = new ArrayList<>();
     ArrayList<Player> noteam = new ArrayList<>();
+    Location diamond;
+    Location iron;
+    Location gold;
     @Override
     public void onEnable() {
         isStop=false;
@@ -39,10 +42,13 @@ public final class Battle extends JavaPlugin {
         scoreboard.registerNewTeam("blue").setPrefix("§9");
         scoreboard.getTeam("red").setAllowFriendlyFire(false);
         scoreboard.getTeam("blue").setAllowFriendlyFire(false);
+        diamond = util.getlocationbyconfig(config,"locations.diamond",Bukkit.getWorld("world"));
+        iron = util.getlocationbyconfig(config,"locations.iron",Bukkit.getWorld("world"));
+        gold = util.getlocationbyconfig(config,"locations.gold",Bukkit.getWorld("world"));
         for (String name:config.getStringList("players.red")) {
             redteam.add((Player) Bukkit.getOfflinePlayer(UUID.fromString(name)));
         }
-        for (String name:config.getStringList("player.blue")) {
+        for (String name:config.getStringList("players.blue")) {
             blueteam.add((Player) Bukkit.getOfflinePlayer(UUID.fromString(name)));
         }
         for (Player p:Bukkit.getOnlinePlayers()) {
@@ -88,18 +94,32 @@ public final class Battle extends JavaPlugin {
     }
     @Override
     public void onDisable() {
+        ArrayList<String> blueuuid = new ArrayList<>();
+        ArrayList<String> reduuid = new ArrayList<>();
+        blueteam.forEach(player -> {
+            blueuuid.add(player.getUniqueId().toString());
+        });
+        redteam.forEach(player -> {
+            reduuid.add(player.getUniqueId().toString());
+        });
+        config.set("players.blue",blueuuid);
+        config.set("players.red",reduuid);
+        saveConfig();
         isStop=true;
     }
 
     private void CheckExile() {
         for (Player p:Bukkit.getOnlinePlayers()) {
-            if (!p.getInventory().containsAtLeast(new ItemStack(Material.DIAMOND),1)){
+            if (!p.getInventory().containsAtLeast(new ItemStack(Material.DIAMOND),1)&&noteam.contains(p)){
                 noteam.remove(p);
+                scoreboard.getTeam(playerData.get(p.getName()).name()).addEntry(p.getName());
+                p.setHealth(0);
                 continue;
             }
             if (!noteam.contains(p)) {
                 noteam.add(p);
                 scoreboard.getTeam(playerData.get(p.getName()).name()).removeEntry(p.getName());
+                p.getServer().broadcast("a",p.getName()+"が亡命の心を手に入れました");
             }
         }
         for (Player p:Bukkit.getOnlinePlayers()) {

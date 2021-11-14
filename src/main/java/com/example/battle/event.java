@@ -5,10 +5,12 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 public class event implements Listener {
     Battle battle;
@@ -54,5 +56,16 @@ public class event implements Listener {
         }
         this.battle.number[1]++;
         return ChatColor.BLUE;
+    }
+    @EventHandler
+    public void onPlayerMoveEvent(PlayerMoveEvent e) {
+        e.getPlayer().ge
+    }
+
+    @EventHandler
+    public void BlockBreakEvent(BlockBreakEvent e) {
+        if (e.getBlock().getLocation()==battle.diamond||e.getBlock().getLocation()==battle.iron||e.getBlock().getLocation()==battle.gold) {
+            e.getBlock().setType(e.getBlock().getType());
+        }
     }
 }
