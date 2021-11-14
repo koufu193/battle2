@@ -59,7 +59,7 @@ public class event implements Listener {
     }
     @EventHandler
     public void onPlayerMoveEvent(PlayerMoveEvent e) {
-        e.getPlayer().ge
+
     }
 
     @EventHandler
