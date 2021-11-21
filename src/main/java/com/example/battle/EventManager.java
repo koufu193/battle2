@@ -1,12 +1,15 @@
 package com.example.battle;
 
 import net.minecraft.server.v1_16_R3.InventoryEnderChest;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.potion.PotionEffectType;
 
@@ -18,8 +21,22 @@ public class EventManager implements Listener {
         this.battle=battle;
     }
     @EventHandler
+    public void joinEvent(PlayerJoinEvent e){
+        if(this.battle.info.getColorByPlayerName(e.getPlayer().getName())==null){
+            this.battle.info.addPlayer(e.getPlayer());
+        }
+    }
+    @EventHandler
     public void pickupInventoyEvent(EntityPickupItemEvent e){
-
+        if(e.getItem().getItemStack().hasItemMeta()) {
+            if (e.getEntity() instanceof Player) {
+                if(!this.battle.info.addEffect((Player)e.getEntity(),e.getItem().getItemStack().getItemMeta().getDisplayName())){
+                    e.setCancelled(true);
+                }
+            } else {
+                e.setCancelled(true);
+            }
+        }
     }
     @EventHandler
     public void dropInventoyEvent(PlayerDropItemEvent e){

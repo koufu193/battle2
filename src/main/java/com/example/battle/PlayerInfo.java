@@ -1,6 +1,9 @@
 package com.example.battle;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -43,7 +46,22 @@ public class PlayerInfo {
             player.setPlayerListName(color+player.getPlayerListName().replaceAll("§.",""));
         }
     }
-
+    //ポーションを上げれたらtrue、違うチームとかであげれなかったらfalse
+    public boolean addEffect(Player p,String itemName){
+        if(playerColor.containsKey(p.getName())){
+            String color=playerColor.get(p.getName()).name();
+            if(itemName.matches("§"+color+"[("+ battle.SAKIMORI_AKASHI_NAME+")("+ battle.KISHI_AKASHI_NAME+")]")){
+                boolean isSakimori=itemName.matches("§"+color+ battle.SAKIMORI_AKASHI_NAME);
+                if(this.battle.kishi_sakimori_data.get(isSakimori?battle.KISHI_AKASHI_NAME:battle.SAKIMORI_AKASHI_NAME).contains(p.getName())) {
+                    PotionEffectType type = isSakimori ? PotionEffectType.DAMAGE_RESISTANCE : PotionEffectType.INCREASE_DAMAGE;
+                    p.addPotionEffect(new PotionEffect(type, 1, 1));
+                    this.battle.kishi_sakimori_data.get(isSakimori? battle.SAKIMORI_AKASHI_NAME : battle.KISHI_AKASHI_NAME).add(p.getName());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     private ChatColor getColor() {
         isRed = !isRed;
         return isRed ? ChatColor.DARK_RED : ChatColor.DARK_BLUE;

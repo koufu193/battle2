@@ -12,13 +12,13 @@ public class Battle extends JavaPlugin {
     final String SAKIMORI_AKASHI_NAME="防人の証";
     Scoreboard scoreboard;
     Map<String, Set<String>> kishi_sakimori_data=new HashMap<>();
+    PlayerInfo info=new PlayerInfo(this);
     @Override
     public void onEnable() {
         saveDefaultConfig();
 
         kishi_sakimori_data.put(KISHI_AKASHI_NAME,new HashSet<>());
         kishi_sakimori_data.put(SAKIMORI_AKASHI_NAME,new HashSet<>());
-
         scoreboard= Bukkit.getScoreboardManager().getNewScoreboard();
         scoreboard.registerNewTeam("red_team").setPrefix("DARK_RED");
         scoreboard.registerNewTeam("blue_team").setPrefix("DARK_BLUE");
