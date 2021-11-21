@@ -10,6 +10,8 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.Arrays;
+
 public class EventManager implements Listener {
     Battle battle;
     public EventManager(Battle battle){
