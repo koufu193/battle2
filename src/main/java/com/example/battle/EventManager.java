@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class EventManager implements Listener {
     Battle battle;
@@ -27,19 +28,21 @@ public class EventManager implements Listener {
         }
     }
     @EventHandler
-    public void pickupInventoyEvent(EntityPickupItemEvent e){
-        if(e.getItem().getItemStack().hasItemMeta()) {
-            if (e.getEntity() instanceof Player) {
-                if(!this.battle.info.addEffect((Player)e.getEntity(),e.getItem().getItemStack().getItemMeta().getDisplayName())){
+    public void pickupInventoryEvent(EntityPickupItemEvent e){
+        if(e.getItem()!=null) {
+            if (e.getItem().getItemStack().hasItemMeta()) {
+                if (e.getEntity() instanceof Player) {
+                    if (!this.battle.info.addEffect((Player) e.getEntity(), e.getItem().getItemStack().getItemMeta().getDisplayName())) {
+                        e.setCancelled(true);
+                    }
+                } else {
                     e.setCancelled(true);
                 }
-            } else {
-                e.setCancelled(true);
             }
         }
     }
     @EventHandler
-    public void dropInventoyEvent(PlayerDropItemEvent e){
+    public void dropInventoryEvent(PlayerDropItemEvent e){
         if(e.getItemDrop().getItemStack().hasItemMeta()){
             if(e.getItemDrop().getItemStack().getItemMeta().getDisplayName().matches("§."+this.battle.KISHI_AKASHI_NAME)){
                 this.battle.kishi_sakimori_data.get(this.battle.KISHI_AKASHI_NAME).remove(e.getPlayer().getName());
@@ -51,7 +54,13 @@ public class EventManager implements Listener {
         }
     }
     @EventHandler
-    public void moveInventoyEvent(InventoryMoveItemEvent e){
-
+    public void moveInventoryEvent(InventoryMoveItemEvent e){
+        if(e.getItem()!=null){
+            if(e.getItem().hasItemMeta()){
+                if(e.getItem().getItemMeta().getDisplayName().matches("§.[("+this.battle.SAKIMORI_AKASHI_NAME+")("+this.battle.KISHI_AKASHI_NAME+")]")){
+                    //処理(アイテムの移動<-どっちに移動したかはしてない)
+                }
+            }
+        }
     }
 }
