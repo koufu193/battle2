@@ -7,11 +7,6 @@ import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.lang.reflect.Array;
-import java.lang.reflect.WildcardType;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 
 public class util {
     Battle battle;
