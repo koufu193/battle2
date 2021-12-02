@@ -1,23 +1,8 @@
 #新しくワールド作るときの名まえ
 newWorldName: "world1"
-#単位は秒
-diamond: 20
-iron: 20
-gold: 20
+
 #場所
 Locations:
-  diamond:
-    x: 0
-    y: 0
-    z: 0
-  iron:
-    x: 0
-    y: 0
-    z: 0
-  gold:
-    x: 0
-    y: 0
-    z: 0
   #赤のスポーン場所
   redLocation:
     x: 0

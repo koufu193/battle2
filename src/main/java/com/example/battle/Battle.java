@@ -16,7 +16,6 @@ public class Battle extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-
         kishi_sakimori_data.put(KISHI_AKASHI_NAME,new HashSet<>());
         kishi_sakimori_data.put(SAKIMORI_AKASHI_NAME,new HashSet<>());
         scoreboard= Bukkit.getScoreboardManager().getNewScoreboard();
@@ -48,4 +47,5 @@ public class Battle extends JavaPlugin {
     //捨てたら同じチームの人は拾えるがそれ以外の人は拾えない
     //チェストなどに証をためて違う色になった後にチェストから違う色の証を取ろうとしたら消える
     //防人の証と騎士の証両方持っていたら両方削除
+    //ワールド名はconfigから
 }

@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class PlayerInfo {
     final Battle battle;
-    private final Map<String, ChatColor> playerColor = new HashMap<>();
+    private final Map<String, PlayerType> playerColor = new HashMap<>();
     boolean isRed = true;
 
     public PlayerInfo(Battle battle) {
@@ -22,36 +22,44 @@ public class PlayerInfo {
 
     @Nullable
     public ChatColor getColorByPlayerName(String playerName) {
-        return playerColor.getOrDefault(playerName, null);
+        return playerColor.getOrDefault(playerName, null).getColor();
     }
 
-    public void addPlayer(org.bukkit.entity.Player player) {
+    public void addPlayer(Player player) {
         if (playerColor.containsKey(player.getName())) {
             changePlayer(player);
         } else {
-            ChatColor color = getColor();
-            playerColor.put(player.getName(), color);
+            PlayerType type=getColor();
+            playerColor.put(player.getName(), type);
             player.setScoreboard(this.battle.scoreboard);
-            this.battle.scoreboard.getTeam(color==ChatColor.DARK_BLUE?"blue_team":"red_team").addEntry(player.getName());
-            player.setPlayerListName(color+player.getPlayerListName());
+            this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").addEntry(player.getName());
+            player.setPlayerListName(type.getColor()+player.getPlayerListName());
         }
     }
-
-    public void changePlayer(org.bukkit.entity.Player player) {
+    public void boumeiPlayer(Player player){
+        if(!playerColor.containsKey(player.getName())){
+            addPlayer(player);
+        }else if(playerColor.get(player.getName()).isBoumei()){
+            changePlayer(player);
+        }
+    }
+    public void changePlayer(Player player) {
         if (!playerColor.containsKey(player.getName())) {
             addPlayer(player);
-        } else {
-            ChatColor color = getColor();
-            playerColor.put(player.getName(), color);
-            this.battle.scoreboard.getTeam(color.name()).addEntry(player.getName());
-            this.battle.scoreboard.getTeam(color==ChatColor.DARK_BLUE?"blue_team":"red_team").removeEntry(player.getName());
-            player.setPlayerListName(color+player.getPlayerListName().replaceAll("§.",""));
+        }else if(!playerColor.get(player.getName()).isBoumei()){
+            boumeiPlayer(player);
+        }else{
+            PlayerType type=playerColor.get(player.getName()).getBeenColor().getChangeColor();
+            playerColor.put(player.getName(), type);
+            this.battle.scoreboard.getTeam(type.getColor().name()).addEntry(player.getName());
+            this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").removeEntry(player.getName());
+            player.setPlayerListName(type.getColor()+player.getPlayerListName().replaceAll("§.",""));
         }
     }
     //ポーションを上げれたらtrue、違うチームとかであげれなかったらfalse
     public boolean addEffect(Player p,String itemName){
         if(playerColor.containsKey(p.getName())){
-            String color=playerColor.get(p.getName()).name();
+            String color=playerColor.get(p.getName()).getColor().name();
             if(itemName.matches("§"+color+"[("+ battle.SAKIMORI_AKASHI_NAME+")("+ battle.KISHI_AKASHI_NAME+")]")){
                 boolean isSakimori=itemName.matches("§"+color+ battle.SAKIMORI_AKASHI_NAME);
                 if(!this.battle.kishi_sakimori_data.get(isSakimori?battle.KISHI_AKASHI_NAME:battle.SAKIMORI_AKASHI_NAME).contains(p.getName())) {
@@ -67,8 +75,8 @@ public class PlayerInfo {
         }
         return false;
     }
-    private ChatColor getColor() {
+    private PlayerType getColor() {
         isRed = !isRed;
-        return isRed ? ChatColor.DARK_RED : ChatColor.DARK_BLUE;
+        return isRed ? PlayerType.RED : PlayerType.BLUE;
     }
 }
