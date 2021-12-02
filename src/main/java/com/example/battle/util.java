@@ -28,7 +28,6 @@ public class util {
         }
         f.delete();
     }
-
     @Nullable
     public Location getLocationByConfig(FileConfiguration config,String... key){
         String path = "";
