@@ -1,6 +1,7 @@
 package com.example.battle;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -19,8 +20,8 @@ public class Battle extends JavaPlugin {
         kishi_sakimori_data.put(KISHI_AKASHI_NAME,new HashSet<>());
         kishi_sakimori_data.put(SAKIMORI_AKASHI_NAME,new HashSet<>());
         scoreboard= Bukkit.getScoreboardManager().getNewScoreboard();
-        scoreboard.registerNewTeam("red_team").setPrefix("DARK_RED");
-        scoreboard.registerNewTeam("blue_team").setPrefix("DARK_BLUE");
+        scoreboard.registerNewTeam("red_team").setPrefix(ChatColor.DARK_RED.name());
+        scoreboard.registerNewTeam("blue_team").setPrefix(ChatColor.DARK_BLUE.name());
         Bukkit.getPluginManager().registerEvents(new EventManager(this),this);
     }
     @Override
