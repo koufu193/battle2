@@ -17,11 +17,12 @@ public class Battle extends JavaPlugin {
     final String KISHI_AKASHI_NAME="騎士の証";
     final String SAKIMORI_AKASHI_NAME="防人の証";
     Scoreboard scoreboard;
-    Map<String, Set<String>> kishi_sakimori_data=new HashMap<>();
+    Map<String, Set<UUID>> kishi_sakimori_data=new HashMap<>();
     PlayerInfo info=new PlayerInfo(this);
     Game game=new Game(this);
     AtomicBoolean canStart=new AtomicBoolean(true);
     boolean isStart=false;
+    EventManager manager=new EventManager(this);
     @Override
     public void onEnable() {
         saveDefaultConfig();
@@ -30,7 +31,6 @@ public class Battle extends JavaPlugin {
         scoreboard=Bukkit.getScoreboardManager().getNewScoreboard();
         scoreboard.registerNewTeam("red_team").setPrefix(ChatColor.DARK_RED.name());
         scoreboard.registerNewTeam("blue_team").setPrefix(ChatColor.DARK_BLUE.name());
-        Bukkit.getPluginManager().registerEvents(new EventManager(this),this);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class Battle extends JavaPlugin {
                     }else if(!canStart.get()){
                         sender.sendMessage("ワールド生成用のクールダウン中です");
                     }else{
-                        this.isStart=true;
+                        Bukkit.broadcastMessage(ChatColor.GREEN+"試合開始");
                         this.game.startGame();
                     }
                 }else if(args[0].equals("reload")) {

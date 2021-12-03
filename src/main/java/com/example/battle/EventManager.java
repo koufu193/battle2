@@ -4,7 +4,10 @@ import net.minecraft.server.v1_16_R3.InventoryEnderChest;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -56,10 +59,6 @@ public class EventManager implements Listener {
         }
     }
     @EventHandler
-    public void moveInventoryEvent(InventoryDragEvent e){
-
-    }
-    @EventHandler
     public void clickInventoryEvent(InventoryClickEvent e){
         if(e.getCurrentItem()!=null){
             if(e.getCurrentItem().hasItemMeta()&&this.battle.info.getColorByPlayerName(e.getWhoClicked().getUniqueId())!=null){
@@ -69,5 +68,9 @@ public class EventManager implements Listener {
                 }
             }
         }
+    }
+    @EventHandler
+    public void explodeEvent(EntityExplodeEvent e){
+        e.blockList().removeIf(b->b.hasMetadata("MAMORI"));
     }
 }
