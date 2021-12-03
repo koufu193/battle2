@@ -2,10 +2,15 @@ package com.example.battle;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Battle extends JavaPlugin {
     util util=new util(this);
@@ -14,16 +19,69 @@ public class Battle extends JavaPlugin {
     Scoreboard scoreboard;
     Map<String, Set<String>> kishi_sakimori_data=new HashMap<>();
     PlayerInfo info=new PlayerInfo(this);
+    Game game=new Game(this);
+    AtomicBoolean canStart=new AtomicBoolean(true);
+    boolean isStart=false;
     @Override
     public void onEnable() {
         saveDefaultConfig();
         kishi_sakimori_data.put(KISHI_AKASHI_NAME,new HashSet<>());
         kishi_sakimori_data.put(SAKIMORI_AKASHI_NAME,new HashSet<>());
-        scoreboard= Bukkit.getScoreboardManager().getNewScoreboard();
+        scoreboard=Bukkit.getScoreboardManager().getNewScoreboard();
         scoreboard.registerNewTeam("red_team").setPrefix(ChatColor.DARK_RED.name());
         scoreboard.registerNewTeam("blue_team").setPrefix(ChatColor.DARK_BLUE.name());
         Bukkit.getPluginManager().registerEvents(new EventManager(this),this);
     }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if(command.getName().equalsIgnoreCase("battle")){
+            if(args.length==1){
+                if(args[0].equals("start")) {
+                    if (isStart) {
+                        sender.sendMessage("すでに試合は始まっています");
+                    }else if(!canStart.get()){
+                        sender.sendMessage("ワールド生成用のクールダウン中です");
+                    }else{
+                        this.isStart=true;
+                        this.game.startGame();
+                    }
+                }else if(args[0].equals("reload")) {
+                    sender.sendMessage("リロード開始");
+                    onDisable();
+                    onEnable();
+                    sender.sendMessage("リロード終了");
+                    return true;
+                }else if(args[0].equals("tp")) {
+                    if (sender instanceof Player) {
+                        if (Bukkit.getWorld(getConfig().getString("newWorldName")) != null) {
+                            Location location = ((Player) sender).getLocation().clone();
+                            location.setWorld(Bukkit.getWorld(getConfig().getString("newWorldName")));
+                            ((Player) sender).teleport(location);
+                            return true;
+                        } else {
+                            sender.sendMessage("ワールドが見つかりませんでした");
+                        }
+                    } else {
+                        sender.sendMessage("プレーヤーしか実行できません");
+                    }
+                }else if(args[0].equals("stop")){
+                    if(isStart){
+                        this.game.finishGame();
+                        Bukkit.broadcastMessage(ChatColor.RED+"試合が強制終了されました");
+                    }else{
+                        sender.sendMessage("試合が始まっていません");
+                    }
+                }else{
+                    sender.sendMessage("コマンドの構文が違います(battle <start/reload/tp/stop>");
+                }
+            }else{
+                sender.sendMessage("コマンドの構文が違います(battle <start/reload/tp/stop>");
+            }
+        }
+        return false;
+    }
+
     @Override
     public void onDisable() {
         saveConfig();

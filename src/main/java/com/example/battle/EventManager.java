@@ -6,6 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -23,7 +25,7 @@ public class EventManager implements Listener {
     }
     @EventHandler
     public void joinEvent(PlayerJoinEvent e){
-        if(this.battle.info.getColorByPlayerName(e.getPlayer().getName())==null){
+        if(this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId())==null){
             this.battle.info.addPlayer(e.getPlayer());
         }
     }
@@ -54,11 +56,16 @@ public class EventManager implements Listener {
         }
     }
     @EventHandler
-    public void moveInventoryEvent(InventoryMoveItemEvent e){
-        if(e.getItem()!=null){
-            if(e.getItem().hasItemMeta()){
-                if(e.getItem().getItemMeta().getDisplayName().matches("§.[("+this.battle.SAKIMORI_AKASHI_NAME+")("+this.battle.KISHI_AKASHI_NAME+")]")){
-                    //処理(アイテムの移動<-どっちに移動したかはしてない)
+    public void moveInventoryEvent(InventoryDragEvent e){
+
+    }
+    @EventHandler
+    public void clickInventoryEvent(InventoryClickEvent e){
+        if(e.getCurrentItem()!=null){
+            if(e.getCurrentItem().hasItemMeta()&&this.battle.info.getColorByPlayerName(e.getWhoClicked().getUniqueId())!=null){
+                PlayerType type=this.battle.info.getColorByPlayerName(e.getWhoClicked().getUniqueId());
+                if(e.getCurrentItem().getItemMeta().getDisplayName().matches(type.isBoumei()?"§.":type.getChangeColor()+"[("+this.battle.KISHI_AKASHI_NAME+")("+this.battle.SAKIMORI_AKASHI_NAME+")]")){
+                    e.setCancelled(true);
                 }
             }
         }

@@ -1,8 +1,16 @@
 #新しくワールド作るときの名まえ
 newWorldName: "world1"
-
+#終わったときにテレポートするワールド
+FinishedTeleportWorld: "world"
+#ワールド生成のためのクールダウンの時間
+waitTime: 5
 #場所
 Locations:
+  #終わったときにテレポートする場所
+  finishedTeleportLocation:
+    x: 0
+    y: 0
+    z: 0
   #赤のスポーン場所
   redLocation:
     x: 0
@@ -13,6 +21,26 @@ Locations:
     x: 0
     y: 0
     z: 0
+  #赤のチェストの場所(名前は1,2とかじゃなくてもよい)
+  redChestLocations:
+    1:
+      x: 0
+      y: 0
+      z: 0
+    2:
+      x: 0
+      y: 0
+      z: 0
+  #青のチェストの場所(名前は1,2とかじゃなくてもよい)
+  blueChestLocations:
+    1:
+      x: 0
+      y: 0
+      z: 0
+    2:
+      x: 0
+      y: 0
+      z: 0
 players:
   red:
   blue:
