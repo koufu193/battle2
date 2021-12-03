@@ -9,13 +9,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryEvent;
-import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
@@ -65,6 +63,20 @@ public class EventManager implements Listener {
                 PlayerType type=this.battle.info.getColorByPlayerName(e.getWhoClicked().getUniqueId());
                 if(e.getCurrentItem().getItemMeta().getDisplayName().matches(type.isBoumei()?"§.":type.getChangeColor()+"[("+this.battle.KISHI_AKASHI_NAME+")("+this.battle.SAKIMORI_AKASHI_NAME+")]")){
                     e.setCancelled(true);
+                }
+            }
+        }
+    }
+    @EventHandler
+    public void closeInventoryEvent(InventoryCloseEvent e){
+        for(ItemStack item:e.getPlayer().getInventory().getContents()){
+            if(item!=null){
+                if(item.hasItemMeta()){
+                    if(item.getItemMeta().getDisplayName().matches("§.[("+this.battle.SAKIMORI_AKASHI_NAME+")("+this.battle.KISHI_AKASHI_NAME+")]")) {
+                        if (!this.battle.info.addEffect((Player) e.getPlayer(), item.getItemMeta().getDisplayName())) {
+                            e.getPlayer().getInventory().remove(item);
+                        }
+                    }
                 }
             }
         }

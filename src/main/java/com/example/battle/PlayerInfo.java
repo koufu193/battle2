@@ -1,5 +1,6 @@
 package com.example.battle;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -42,6 +43,27 @@ public class PlayerInfo {
             addPlayer(player);
         }else if(playerColor.get(player.getUniqueId()).isBoumei()){
             changePlayer(player);
+        }else{
+            player.setPlayerListName(player.getName());
+            PlayerType type=playerColor.get(player.getUniqueId());
+            this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").removeEntry(player.getName());
+            this.battle.scoreboard.getTeam("boumei_team").addEntry(player.getName());
+            playerColor.put(player.getUniqueId(),type.getBoumei());
+            Bukkit.broadcastMessage(ChatColor.DARK_RED+player.getName()+ChatColor.RED+"が亡命を図った("+type.getChangeColor().getColor().name()+"チームを目指しています)");
+            for(String str:this.battle.kishi_sakimori_data.keySet()){
+                if(this.battle.kishi_sakimori_data.get(str).contains(player.getUniqueId())){
+                    this.battle.kishi_sakimori_data.get(str).remove(player.getUniqueId());
+                }
+            }
+            for(ItemStack item:player.getInventory().getContents()){
+                if(item!=null){
+                    if(item.hasItemMeta()){
+                        if(item.getItemMeta().getDisplayName().matches("§.[("+this.battle.KISHI_AKASHI_NAME+")("+ this.battle.SAKIMORI_AKASHI_NAME+")]")){
+                            player.getInventory().remove(item);
+                        }
+                    }
+                }
+            }
         }
     }
     public void changePlayer(Player player) {
@@ -54,19 +76,25 @@ public class PlayerInfo {
             playerColor.put(player.getUniqueId(), type);
             this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"red_team":"blue_team").addEntry(player.getName());
             this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").removeEntry(player.getName());
-            player.setPlayerListName(type.getColor()+player.getPlayerListName().replaceAll("§.",""));
+            player.setPlayerListName(type.getColor()+player.getPlayerListName());
+        }
+    }
+    public void backColor(Player player){
+        if(!playerColor.containsKey(player.getUniqueId())){
+            addPlayer(player);
+        }else if(!playerColor.get(player).isBoumei()){
+            boumeiPlayer(player);
+        }else{
+
         }
     }
     //ポーションを上げれたらtrue、違うチームとかであげれなかったらfalse
     public boolean addEffect(Player p,String itemName){
         if(playerColor.containsKey(p.getUniqueId())){
-            String color=playerColor.get(p.getUniqueId()).getColor().name();
-            if(itemName.matches("§"+color+"[("+ battle.SAKIMORI_AKASHI_NAME+")("+ battle.KISHI_AKASHI_NAME+")]")){
-                boolean isSakimori=itemName.matches("§"+color+ battle.SAKIMORI_AKASHI_NAME);
-                if(Arrays.stream(p.getInventory().getContents()).anyMatch(b->b.getItemMeta().getDisplayName().equals(itemName))){
-                    return false;
-                }
-                if(!this.battle.kishi_sakimori_data.get(isSakimori?battle.KISHI_AKASHI_NAME:battle.SAKIMORI_AKASHI_NAME).contains(p.getName())) {
+            ChatColor color=playerColor.get(p.getUniqueId()).getColor();
+            if(itemName.matches(color+"[("+ battle.SAKIMORI_AKASHI_NAME+")("+ battle.KISHI_AKASHI_NAME+")]")&&!playerColor.get(p.getUniqueId()).isBoumei()){
+                boolean isSakimori=itemName.matches(color+ battle.SAKIMORI_AKASHI_NAME);
+                if(!this.battle.kishi_sakimori_data.get(isSakimori?battle.KISHI_AKASHI_NAME:battle.SAKIMORI_AKASHI_NAME).contains(p.getUniqueId())) {
                     PotionEffectType type = isSakimori ? PotionEffectType.DAMAGE_RESISTANCE : PotionEffectType.INCREASE_DAMAGE;
                     p.addPotionEffect(new PotionEffect(type, 90, 1));
                     this.battle.kishi_sakimori_data.get(isSakimori? battle.SAKIMORI_AKASHI_NAME : battle.KISHI_AKASHI_NAME).add(p.getUniqueId());

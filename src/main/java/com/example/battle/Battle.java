@@ -29,8 +29,9 @@ public class Battle extends JavaPlugin {
         kishi_sakimori_data.put(KISHI_AKASHI_NAME,new HashSet<>());
         kishi_sakimori_data.put(SAKIMORI_AKASHI_NAME,new HashSet<>());
         scoreboard=Bukkit.getScoreboardManager().getNewScoreboard();
-        scoreboard.registerNewTeam("red_team").setPrefix(ChatColor.DARK_RED.name());
-        scoreboard.registerNewTeam("blue_team").setPrefix(ChatColor.DARK_BLUE.name());
+        scoreboard.registerNewTeam("red_team").setPrefix(ChatColor.DARK_RED.toString());
+        scoreboard.registerNewTeam("blue_team").setPrefix(ChatColor.DARK_BLUE.toString());
+        scoreboard.registerNewTeam("boumei_team").setPrefix(ChatColor.WHITE.toString());
     }
 
     @Override
@@ -93,7 +94,7 @@ public class Battle extends JavaPlugin {
     //騎士の証や防人の証＜＝dark red or dark blue
     //騎士:攻撃力増加レベル1 <= done
     //防人:耐性レベル1 <= done
-    //エフェクト:10秒ごとぐらいに証を持っている人に対応するエフェクトだす(12秒ごと)
+    //エフェクト:10秒ごとぐらいに証を持っている人に対応するエフェクトだす(12秒ごと)<=done
     //↑初めはイベントで証をゲットしたときにエフェクト出す(12秒)
     //アプサラスへの亡命書(青)<-dark blue
     //アルティオへの亡命書(赤)<-dark red
@@ -107,4 +108,5 @@ public class Battle extends JavaPlugin {
     //チェストなどに証をためて違う色になった後にチェストから違う色の証を取ろうとしたら消える
     //防人の証と騎士の証両方持っていたら両方削除
     //ワールド名はconfigから
+    //旗は一本しかさせない
 }
