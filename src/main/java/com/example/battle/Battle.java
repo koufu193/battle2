@@ -23,9 +23,13 @@ public class Battle extends JavaPlugin {
     AtomicBoolean canStart=new AtomicBoolean(true);
     boolean isStart=false;
     EventManager manager=new EventManager(this);
+    Location blue_spawn_location;
+    Location red_spawn_location;
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        blue_spawn_location=util.getLocationByConfig(getConfig(),"Locations","blueLocation");
+        red_spawn_location=util.getLocationByConfig(getConfig(),"Locations","redLocation");
         kishi_sakimori_data.put(KISHI_AKASHI_NAME,new HashSet<>());
         kishi_sakimori_data.put(SAKIMORI_AKASHI_NAME,new HashSet<>());
         scoreboard=Bukkit.getScoreboardManager().getNewScoreboard();
@@ -109,4 +113,6 @@ public class Battle extends JavaPlugin {
     //防人の証と騎士の証両方持っていたら両方削除
     //ワールド名はconfigから
     //旗は一本しかさせない
+    //無所属で死んだり亡命捨てたらインベントリクリア
+    //所属の場合死んだらそのままロスト
 }

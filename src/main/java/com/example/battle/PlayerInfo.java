@@ -2,6 +2,7 @@ package com.example.battle;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -36,6 +37,7 @@ public class PlayerInfo {
             player.setScoreboard(this.battle.scoreboard);
             this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").addEntry(player.getName());
             player.setPlayerListName(type.getColor()+player.getPlayerListName());
+            setSpawnLocation(player,type);
         }
     }
     public void boumeiPlayer(Player player){
@@ -66,6 +68,9 @@ public class PlayerInfo {
             }
         }
     }
+    private void setSpawnLocation(Player player,PlayerType type){
+        player.setBedSpawnLocation(type.getBeenColor()==PlayerType.RED?this.battle.red_spawn_location:this.battle.blue_spawn_location);
+    }
     public void changePlayer(Player player) {
         if (!playerColor.containsKey(player.getUniqueId())) {
             addPlayer(player);
@@ -77,15 +82,22 @@ public class PlayerInfo {
             this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"red_team":"blue_team").addEntry(player.getName());
             this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").removeEntry(player.getName());
             player.setPlayerListName(type.getColor()+player.getPlayerListName());
+            setSpawnLocation(player,type);
         }
     }
-    public void backColor(Player player){
+    public void backColor(Player player,boolean isKilled){
         if(!playerColor.containsKey(player.getUniqueId())){
             addPlayer(player);
         }else if(!playerColor.get(player).isBoumei()){
             boumeiPlayer(player);
         }else{
-
+            if(!isKilled){
+                player.damage(Integer.MAX_VALUE);
+            }
+            player.getInventory().clear();
+            Bukkit.broadcastMessage(player.getName()+"は亡命に失敗した");
+            playerColor.put(player.getUniqueId(),playerColor.get(player.getUniqueId()).getBeenColor());
+            setSpawnLocation(player,playerColor.get(player.getUniqueId()));
         }
     }
     //ポーションを上げれたらtrue、違うチームとかであげれなかったらfalse

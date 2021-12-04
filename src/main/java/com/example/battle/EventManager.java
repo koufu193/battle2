@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -53,6 +54,14 @@ public class EventManager implements Listener {
             }else if(e.getItemDrop().getItemStack().getItemMeta().getDisplayName().matches("§."+this.battle.SAKIMORI_AKASHI_NAME)){
                 this.battle.kishi_sakimori_data.get(this.battle.SAKIMORI_AKASHI_NAME).remove(e.getPlayer().getName());
                 e.getPlayer().removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
+            }else if(e.getItemDrop().getItemStack().getItemMeta().getDisplayName().matches("[("+ChatColor.DARK_RED+"アルティオ)("+ChatColor.DARK_BLUE+"アプサラス)]への亡命書")){
+                e.getItemDrop().remove();
+                PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
+                if(type==null){
+                    e.getPlayer().sendMessage("亡命していないのに亡命所を使わないでください");
+                }else if(type.isBoumei()) {
+                    this.battle.info.backColor(e.getPlayer(), false);
+                }
             }
         }
     }
@@ -69,6 +78,8 @@ public class EventManager implements Listener {
     }
     @EventHandler
     public void closeInventoryEvent(InventoryCloseEvent e){
+        PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
+        boolean hasBoumei=false;
         for(ItemStack item:e.getPlayer().getInventory().getContents()){
             if(item!=null){
                 if(item.hasItemMeta()){
@@ -77,12 +88,30 @@ public class EventManager implements Listener {
                             e.getPlayer().getInventory().remove(item);
                         }
                     }
+                    if(type!=null&&!hasBoumei){
+                        if(type.isBoumei()){
+                            if(item.getItemMeta().getDisplayName().matches("[("+ChatColor.DARK_RED+"アルティオ)("+ChatColor.DARK_BLUE+"アプサラス)]への亡命書")){
+                                hasBoumei=true;
+                            }
+                        }else{
+                            hasBoumei=true;
+                        }
+                    }
                 }
             }
+        }
+        if(!hasBoumei){
+            this.battle.info.backColor((Player) e.getPlayer(),false);
         }
     }
     @EventHandler
     public void explodeEvent(EntityExplodeEvent e){
         e.blockList().removeIf(b->b.hasMetadata("MAMORI"));
+    }
+    @EventHandler
+    public void deathEvent(PlayerDeathEvent e){
+        if(this.battle.info.getColorByPlayerName(e.getEntity().getUniqueId()).isBoumei()){
+            this.battle.info.backColor(e.getEntity(),true);
+        }
     }
 }
