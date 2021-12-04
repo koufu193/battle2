@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
@@ -102,6 +103,15 @@ public class EventManager implements Listener {
         }
         if(!hasBoumei){
             this.battle.info.backColor((Player) e.getPlayer(),false);
+            for(ItemStack item:e.getView().getTopInventory().getContents()){
+                if(item!=null) {
+                    if(item.hasItemMeta()) {
+                        if (item.getItemMeta().getDisplayName().matches("[(" + ChatColor.DARK_RED + "アルティオ)(" + ChatColor.DARK_BLUE + "アプサラス)]への亡命書")) {
+                            e.getView().getBottomInventory().remove(item);
+                        }
+                    }
+                }
+            }
         }
     }
     @EventHandler
