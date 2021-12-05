@@ -103,7 +103,7 @@ public class EventManager implements Listener {
                 }
             }
         }
-        if(!hasBoumei){
+        if(!hasBoumei&&type.isBoumei()){
             this.battle.info.backColor((Player) e.getPlayer(),false);
             for(ItemStack item:e.getView().getTopInventory().getContents()){
                 if(item!=null) {
@@ -144,6 +144,13 @@ public class EventManager implements Listener {
                 Location location=e.getClickedBlock().getLocation();
                 e.setCancelled(this.battle.chestData.entrySet().stream().filter(a->a.getKey()!=type).anyMatch(a->a.getValue().stream().anyMatch(b->b.getX()==location.getX()&&b.getY()==location.getY()&&b.getZ()==location.getZ())));
             }
+        }
+    }
+    @EventHandler
+    public void RespawnEvent(PlayerRespawnEvent e){
+        PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
+        if(type!=null){
+            e.getPlayer().teleport(type==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
         }
     }
     @EventHandler

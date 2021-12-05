@@ -37,7 +37,6 @@ public class PlayerInfo {
             player.setScoreboard(this.battle.scoreboard);
             this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").addEntry(player.getName());
             player.setPlayerListName(type.getColor()+player.getPlayerListName());
-            setSpawnLocation(player,type);
         }
     }
     public void boumeiPlayer(Player player){
@@ -51,7 +50,7 @@ public class PlayerInfo {
             this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").removeEntry(player.getName());
             this.battle.scoreboard.getTeam("boumei_team").addEntry(player.getName());
             playerColor.put(player.getUniqueId(),type.getBoumei());
-            Bukkit.broadcastMessage(ChatColor.DARK_RED+player.getName()+ChatColor.RED+"が亡命を図った("+type.getChangeColor().getColor().name()+"チームを目指しています)");
+            Bukkit.broadcastMessage(player.getName()+ChatColor.RED+"が亡命を図った("+type.getChangeColor().getColor().name()+"チームを目指しています)");
             for(String str:this.battle.kishi_sakimori_data.keySet()){
                 if(this.battle.kishi_sakimori_data.get(str).contains(player.getUniqueId())){
                     this.battle.kishi_sakimori_data.get(str).remove(player.getUniqueId());
@@ -68,9 +67,6 @@ public class PlayerInfo {
             }
         }
     }
-    private void setSpawnLocation(Player player,PlayerType type){
-        player.setBedSpawnLocation(type.getBeenColor()==PlayerType.RED?this.battle.red_spawn_location:this.battle.blue_spawn_location,true);
-    }
     public void changePlayer(Player player) {
         if (!playerColor.containsKey(player.getUniqueId())) {
             addPlayer(player);
@@ -82,22 +78,23 @@ public class PlayerInfo {
             this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"red_team":"blue_team").addEntry(player.getName());
             this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").removeEntry(player.getName());
             player.setPlayerListName(type.getColor()+player.getPlayerListName());
-            setSpawnLocation(player,type);
         }
     }
     public void backColor(Player player,boolean isKilled){
         if(!playerColor.containsKey(player.getUniqueId())){
             addPlayer(player);
-        }else if(!playerColor.get(player).isBoumei()){
+        }else if(!playerColor.get(player.getUniqueId()).isBoumei()){
             boumeiPlayer(player);
         }else{
             if(!isKilled){
-                player.damage(Integer.MAX_VALUE);
+                player.setHealth(0);
             }
+            PlayerType type=playerColor.get(player.getUniqueId());
             player.getInventory().clear();
-            Bukkit.broadcastMessage(player.getName()+"は亡命に失敗した");
-            playerColor.put(player.getUniqueId(),playerColor.get(player.getUniqueId()).getBeenColor());
-            setSpawnLocation(player,playerColor.get(player.getUniqueId()));
+            Bukkit.broadcastMessage(player.getName()+ChatColor.RED+"は亡命に失敗した");
+            playerColor.put(player.getUniqueId(),type.getBeenColor());
+            this.battle.scoreboard.getTeam(type.getBeenColor()==PlayerType.BLUE?"blue_team":"red_team").addEntry(player.getName());
+            player.setPlayerListName(type.getBeenColor().getColor()+player.getPlayerListName());
         }
     }
     //ポーションを上げれたらtrue、違うチームとかであげれなかったらfalse
