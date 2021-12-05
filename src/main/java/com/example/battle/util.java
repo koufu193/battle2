@@ -33,7 +33,7 @@ public class util {
         String path = "";
         ConfigurationSection data;
         for(String str:key){
-            path+=str;
+            path+="."+str;
         }
         if(!config.contains(path)){
             return null;
@@ -45,7 +45,7 @@ public class util {
         return new Location(Bukkit.getWorld(getWorldName()),data.getDouble("x"),data.getDouble("y"),data.getDouble("z"));
     }
     public String getWorldName(){
-        if(Bukkit.getWorld(this.battle.getConfig().getString("newWroldName"))!=null){
+        if(Bukkit.getWorld(this.battle.getConfig().getString("newWorldName"))!=null){
             return this.battle.getConfig().getString("newWorldName");
         }
         return "world";

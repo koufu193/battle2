@@ -15,19 +15,19 @@ public class Game {
         this.battle=battle;
     }
     public void startGame(){
-        this.battle.isStart=true;
+        this.battle.isStart.set(true);
         for(Player p:Bukkit.getOnlinePlayers()) {
             this.battle.info.addPlayer(p);
         }
         Bukkit.getPluginManager().registerEvents(this.battle.manager,this.battle);
         this.battle.blue_spawn_location.getBlock().setType(Material.END_PORTAL);
         this.battle.red_spawn_location.getBlock().setType(Material.END_PORTAL);
-        new BukkitRunnable(){
+        Bukkit.getScheduler().runTaskAsynchronously(this.battle,new Runnable(){
             PotionEffect kishi=new PotionEffect(PotionEffectType.INCREASE_DAMAGE,90,1);
             PotionEffect sakimori=new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,90,1);
             @Override
             public void run() {
-                while(battle.isStart){
+                while(battle.isStart.get()){
                     for(String str:battle.kishi_sakimori_data.keySet()){
                         battle.kishi_sakimori_data.get(str).forEach(b->Bukkit.getPlayer(b).addPotionEffect(str.equals(battle.KISHI_AKASHI_NAME)?kishi:sakimori));
                     }
@@ -38,7 +38,7 @@ public class Game {
                     }
                 }
             }
-        }.runTask(this.battle);
+        });
     }
     public void finishGame(){//後処理(プレーヤーのtpとか)
         HandlerList.unregisterAll(this.battle);
@@ -47,7 +47,7 @@ public class Game {
         for(String str:this.battle.kishi_sakimori_data.keySet()){
             this.battle.kishi_sakimori_data.get(str).clear();
         }
-        this.battle.isStart=false;
+        this.battle.isStart.set(false);
         if(location==null){
             this.battle.getLogger().warning("テレポート先が見つかりません");
             throw new IllegalArgumentException("configの項目が足りないです<-Locations.finishedTeleportLocation");

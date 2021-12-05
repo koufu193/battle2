@@ -69,7 +69,7 @@ public class PlayerInfo {
         }
     }
     private void setSpawnLocation(Player player,PlayerType type){
-        player.setBedSpawnLocation(type.getBeenColor()==PlayerType.RED?this.battle.red_spawn_location:this.battle.blue_spawn_location);
+        player.setBedSpawnLocation(type.getBeenColor()==PlayerType.RED?this.battle.red_spawn_location:this.battle.blue_spawn_location,true);
     }
     public void changePlayer(Player player) {
         if (!playerColor.containsKey(player.getUniqueId())) {

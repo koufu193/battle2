@@ -21,7 +21,7 @@ public class Battle extends JavaPlugin {
     PlayerInfo info=new PlayerInfo(this);
     Game game=new Game(this);
     AtomicBoolean canStart=new AtomicBoolean(true);
-    boolean isStart=false;
+    AtomicBoolean isStart=new AtomicBoolean(false);
     EventManager manager=new EventManager(this);
     Location blue_spawn_location;
     Location red_spawn_location;
@@ -54,7 +54,7 @@ public class Battle extends JavaPlugin {
         if(command.getName().equalsIgnoreCase("battle")){
             if(args.length==1){
                 if(args[0].equals("start")) {
-                    if (isStart) {
+                    if (isStart.get()) {
                         sender.sendMessage("すでに試合は始まっています");
                     }else if(!canStart.get()){
                         sender.sendMessage("ワールド生成用のクールダウン中です");
@@ -82,7 +82,7 @@ public class Battle extends JavaPlugin {
                         sender.sendMessage("プレーヤーしか実行できません");
                     }
                 }else if(args[0].equals("stop")){
-                    if(isStart){
+                    if(isStart.get()){
                         this.game.finishGame();
                         Bukkit.broadcastMessage(ChatColor.RED+"試合が強制終了されました");
                     }else{
