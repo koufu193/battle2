@@ -2,18 +2,20 @@ package com.example.battle;
 
 import net.minecraft.server.v1_16_R3.InventoryEnderChest;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.*;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
@@ -111,6 +113,36 @@ public class EventManager implements Listener {
                         }
                     }
                 }
+            }
+        }
+    }
+    @EventHandler
+    public void boumeievent(PlayerPortalEvent e){
+        e.setCancelled(e.getCause()!=PlayerTeleportEvent.TeleportCause.PLUGIN);
+        PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
+        if(type!=null&&e.getCause()== PlayerTeleportEvent.TeleportCause.END_PORTAL) {
+            if (this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId()).isBoumei()&&(type.getBeenColor()==PlayerType.BLUE?this.battle.red_spawn_location:this.battle.blue_spawn_location).distance(e.getPlayer().getLocation())<=2){
+                this.battle.info.changePlayer(e.getPlayer());
+            }
+        }
+    }
+    @EventHandler
+    public void hurtPlayerEvent(EntityDamageByEntityEvent e){
+        PlayerType type=this.battle.info.getColorByPlayerName(e.getEntity().getUniqueId());
+        PlayerType typeDamage=this.battle.info.getColorByPlayerName(e.getDamager().getUniqueId());
+        if(type!=null&&typeDamage!=null){
+            if(!type.isBoumei()&&!typeDamage.isBoumei()&&type==typeDamage){
+                e.setCancelled(true);
+            }
+        }
+    }
+    @EventHandler
+    public void ClickEvent(PlayerInteractEvent e){
+        if(e.getAction()==Action.RIGHT_CLICK_BLOCK&&!(e.getPlayer().isSneaking()&&e.hasItem())){
+            if(e.getClickedBlock().getType()== Material.CHEST){
+                PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
+                Location location=e.getClickedBlock().getLocation();
+                e.setCancelled(this.battle.chestData.entrySet().stream().filter(a->a.getKey()!=type).anyMatch(a->a.getValue().stream().anyMatch(b->b.getX()==location.getX()&&b.getY()==location.getY()&&b.getZ()==location.getZ())));
             }
         }
     }

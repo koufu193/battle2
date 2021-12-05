@@ -2,6 +2,7 @@ package com.example.battle;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.potion.PotionEffect;
@@ -19,6 +20,8 @@ public class Game {
             this.battle.info.addPlayer(p);
         }
         Bukkit.getPluginManager().registerEvents(this.battle.manager,this.battle);
+        this.battle.blue_spawn_location.getBlock().setType(Material.END_PORTAL);
+        this.battle.red_spawn_location.getBlock().setType(Material.END_PORTAL);
         new BukkitRunnable(){
             PotionEffect kishi=new PotionEffect(PotionEffectType.INCREASE_DAMAGE,90,1);
             PotionEffect sakimori=new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,90,1);

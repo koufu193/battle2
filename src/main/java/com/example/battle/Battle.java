@@ -25,9 +25,20 @@ public class Battle extends JavaPlugin {
     EventManager manager=new EventManager(this);
     Location blue_spawn_location;
     Location red_spawn_location;
+    Map<PlayerType,List<Location>> chestData=new HashMap<>();
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        List<Location> data=new ArrayList<>();
+        for(String str:getConfig().getConfigurationSection("Locations.redChestLocations").getKeys(false)){
+            data.add(this.util.getLocationByConfig(getConfig(),"Locations.redChestLocations",str));
+        }
+        chestData.put(PlayerType.RED,data);
+        List<Location> data1=new ArrayList<>();
+        for(String str:getConfig().getConfigurationSection("Locations.blueChestLocations").getKeys(false)){
+            data1.add(this.util.getLocationByConfig(getConfig(),"Locations.blueChestLocations",str));
+        }
+        chestData.put(PlayerType.BLUE,data1);
         blue_spawn_location=util.getLocationByConfig(getConfig(),"Locations","blueLocation");
         red_spawn_location=util.getLocationByConfig(getConfig(),"Locations","redLocation");
         kishi_sakimori_data.put(KISHI_AKASHI_NAME,new HashSet<>());
@@ -78,10 +89,10 @@ public class Battle extends JavaPlugin {
                         sender.sendMessage("試合が始まっていません");
                     }
                 }else{
-                    sender.sendMessage("コマンドの構文が違います(battle <start/reload/tp/stop>");
+                    sender.sendMessage("コマンドの構文が違います(battle <start/reload/tp/stop>)");
                 }
             }else{
-                sender.sendMessage("コマンドの構文が違います(battle <start/reload/tp/stop>");
+                sender.sendMessage("コマンドの構文が違います(battle <start/reload/tp/stop>)");
             }
         }
         return false;
@@ -99,20 +110,20 @@ public class Battle extends JavaPlugin {
     //騎士:攻撃力増加レベル1 <= done
     //防人:耐性レベル1 <= done
     //エフェクト:10秒ごとぐらいに証を持っている人に対応するエフェクトだす(12秒ごと)<=done
-    //↑初めはイベントで証をゲットしたときにエフェクト出す(12秒)
-    //アプサラスへの亡命書(青)<-dark blue
-    //アルティオへの亡命書(赤)<-dark red
+    //↑初めはイベントで証をゲットしたときにエフェクト出す(12秒)<-done
+    //アプサラスへの亡命書(青)<-dark blue<-done
+    //アルティオへの亡命書(赤)<-dark red<-done
     //アプサラス制圧旗(青色の旗)<-dark blue
     //アルティオ制圧旗(赤色の旗),-dark red
     //おかれたら旗は1時間ごとにアナウンス、24時間経過で終了
     //()は除く
     //制圧を示す制圧旗が立てられ○○時間が経過しました
-    //無所属の場合：その人が持っている証は消す
-    //捨てたら同じチームの人は拾えるがそれ以外の人は拾えない
-    //チェストなどに証をためて違う色になった後にチェストから違う色の証を取ろうとしたら消える
-    //防人の証と騎士の証両方持っていたら両方削除
-    //ワールド名はconfigから
+    //無所属の場合：その人が持っている証は消す<-done
+    //捨てたら同じチームの人は拾えるがそれ以外の人は拾えない<-done
+    //チェストなどに証をためて違う色になった後にチェストから違う色の証を取ろうとしたら消える<-done
+    //防人の証と騎士の証両方持っていたら両方削除<-done
+    //ワールド名はconfigから<-done
     //旗は一本しかさせない
-    //無所属で死んだり亡命捨てたらインベントリクリア
-    //所属の場合死んだらそのままロスト
+    //無所属で死んだり亡命捨てたらインベントリクリア<-done
+    //所属の場合死んだらそのままロスト<-done
 }

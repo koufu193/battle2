@@ -4,4 +4,5 @@ main: com.example.battle.Battle
 api-version: 1.16
 commands:
   battle:
-    des
+    description: battleのコマンド(battle <start/reload/tp/stop>)
+    permission: battle.do
