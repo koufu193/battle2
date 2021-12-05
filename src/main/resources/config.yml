@@ -13,13 +13,13 @@ Locations:
     z: 0
   #赤のスポーン場所
   redLocation:
-    x: 0
-    y: 0
+    x: 4500
+    y: 65
     z: 0
   #青のスポーン場所
   blueLocation:
-    x: 0
-    y: 0
+    x: -4500
+    y: 65
     z: 0
   #赤のチェストの場所(名前は1,2とかじゃなくてもよい)
   redChestLocations:
