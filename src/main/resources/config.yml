@@ -4,6 +4,7 @@ newWorldName: "world1"
 FinishedTeleportWorld: "world"
 #ワールド生成のためのクールダウンの時間
 waitTime: 5
+isStart: false
 #場所
 Locations:
   #終わったときにテレポートする場所
@@ -41,6 +42,3 @@ Locations:
       x: 0
       y: 0
       z: 0
-players:
-  red:
-  blue:

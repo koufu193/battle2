@@ -7,6 +7,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.*;
@@ -26,6 +28,7 @@ public class Battle extends JavaPlugin {
     Location blue_spawn_location;
     Location red_spawn_location;
     Map<PlayerType,List<Location>> chestData=new HashMap<>();
+    UUIDFile file=new UUIDFile(this);
     @Override
     public void onEnable() {
         saveDefaultConfig();
@@ -47,6 +50,26 @@ public class Battle extends JavaPlugin {
         scoreboard.registerNewTeam("red_team").setPrefix(ChatColor.DARK_RED.toString());
         scoreboard.registerNewTeam("blue_team").setPrefix(ChatColor.DARK_BLUE.toString());
         scoreboard.registerNewTeam("boumei_team").setPrefix(ChatColor.WHITE.toString());
+        if(file.isStarted()){
+            file.setData();
+            isStart.set(true);
+            Bukkit.getPluginManager().registerEvents(this.manager,this);
+            Bukkit.getScheduler().runTaskTimer(this,new Runnable(){
+                PotionEffect kishi=new PotionEffect(PotionEffectType.INCREASE_DAMAGE,90,1);
+                PotionEffect sakimori=new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,90,1);
+                @Override
+                public void run() {
+                    for (String str : kishi_sakimori_data.keySet()) {
+                        kishi_sakimori_data.get(str).forEach(b -> Bukkit.getPlayer(b).addPotionEffect(str.equals(KISHI_AKASHI_NAME) ? kishi : sakimori));
+                    }
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            },0,90*20);
+        }
     }
 
     @Override
@@ -101,6 +124,10 @@ public class Battle extends JavaPlugin {
     @Override
     public void onDisable() {
         saveConfig();
+        if(isStart.get()){
+            file.saveData();
+            this.game.finishGame();
+        }
     }
     //-4000 65 0 <-blue spawn
     //4000 65 0 <-red spawn
