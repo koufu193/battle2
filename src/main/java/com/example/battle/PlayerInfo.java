@@ -37,6 +37,7 @@ public class PlayerInfo {
             player.setScoreboard(this.battle.scoreboard);
             this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").addEntry(player.getName());
             player.setPlayerListName(type.getColor()+player.getPlayerListName());
+            player.teleport(type==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
         }
     }
     public void boumeiPlayer(Player player){
@@ -86,15 +87,13 @@ public class PlayerInfo {
         }else if(!playerColor.get(player.getUniqueId()).isBoumei()){
             boumeiPlayer(player);
         }else{
-            if(!isKilled){
-                player.setHealth(0);
-            }
             PlayerType type=playerColor.get(player.getUniqueId());
             player.getInventory().clear();
             Bukkit.broadcastMessage(player.getName()+ChatColor.RED+"は亡命に失敗した");
             playerColor.put(player.getUniqueId(),type.getBeenColor());
             this.battle.scoreboard.getTeam(type.getBeenColor()==PlayerType.BLUE?"blue_team":"red_team").addEntry(player.getName());
             player.setPlayerListName(type.getBeenColor().getColor()+player.getPlayerListName());
+            player.teleport(type.getBeenColor()==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
         }
     }
     //ポーションを上げれたらtrue、違うチームとかであげれなかったらfalse

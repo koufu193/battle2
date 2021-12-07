@@ -30,8 +30,11 @@ public class EventManager implements Listener {
     }
     @EventHandler
     public void joinEvent(PlayerJoinEvent e){
-        if(this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId())==null){
+        PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
+        if(type==null){
             this.battle.info.addPlayer(e.getPlayer());
+        }else{
+            e.getPlayer().setPlayerListName(type.getColor()+e.getPlayer().getName());
         }
     }
     @EventHandler
@@ -150,7 +153,7 @@ public class EventManager implements Listener {
     public void RespawnEvent(PlayerRespawnEvent e){
         PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
         if(type!=null){
-            e.getPlayer().teleport(type==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
+            e.getPlayer().teleport(type.getBeenColor()==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
         }
     }
     @EventHandler

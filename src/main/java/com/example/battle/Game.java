@@ -29,11 +29,6 @@ public class Game {
                 for (String str : battle.kishi_sakimori_data.keySet()) {
                     battle.kishi_sakimori_data.get(str).forEach(b -> Bukkit.getPlayer(b).addPotionEffect(str.equals(battle.KISHI_AKASHI_NAME) ? kishi : sakimori));
                 }
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
         },0,90*20);
     }
