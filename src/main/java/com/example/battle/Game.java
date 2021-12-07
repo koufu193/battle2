@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class Game {
     Battle battle;
@@ -48,7 +49,6 @@ public class Game {
             location.setWorld(Bukkit.getWorld(this.battle.getConfig().getString("FinishedTeleportWorld")));
             this.battle.info.playerColor.keySet().forEach(b -> Bukkit.getPlayer(b).teleport(location));
             this.battle.canStart.set(false);
-            Bukkit.getScheduler().runTaskLater(this.battle,bukkitTask -> battle.canStart.set(true),this.battle.getConfig().getInt("waitTime")*20);
             this.battle.util.makeNewWorld(this.battle.getConfig().getString("newWorldName"));
         }
     }

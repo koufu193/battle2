@@ -153,7 +153,9 @@ public class EventManager implements Listener {
     public void RespawnEvent(PlayerRespawnEvent e){
         PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
         if(type!=null){
-            e.getPlayer().teleport(type.getBeenColor()==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
+            System.out.println("aaaa");
+            e.setRespawnLocation(type.getBeenColor()==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
+            //e.getPlayer().teleport(type.getBeenColor()==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
         }
     }
     @EventHandler

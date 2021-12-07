@@ -107,6 +107,7 @@ public class Battle extends JavaPlugin {
                 }else if(args[0].equals("stop")){
                     if(isStart.get()){
                         this.game.finishGame();
+                        Bukkit.getScheduler().runTaskLater(this,bukkitTask -> this.canStart.set(true),this.getConfig().getInt("waitTime")*20);
                         Bukkit.broadcastMessage(ChatColor.RED+"試合が強制終了されました");
                     }else{
                         sender.sendMessage("試合が始まっていません");
