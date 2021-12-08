@@ -42,8 +42,10 @@ public class EventManager implements Listener {
         if(e.getItem()!=null) {
             if (e.getItem().getItemStack().hasItemMeta()) {
                 if (e.getEntity() instanceof Player) {
-                    if (!this.battle.info.addEffect((Player) e.getEntity(), e.getItem().getItemStack().getItemMeta().getDisplayName())) {
-                        e.setCancelled(true);
+                    if(e.getItem().getItemStack().getItemMeta().getDisplayName().matches("§.[("+this.battle.SAKIMORI_AKASHI_NAME+")("+this.battle.KISHI_AKASHI_NAME+")]")) {
+                        if (!this.battle.info.addEffect((Player) e.getEntity(), e.getItem().getItemStack().getItemMeta().getDisplayName())) {
+                            e.setCancelled(true);
+                        }
                     }
                 } else {
                     e.setCancelled(true);
