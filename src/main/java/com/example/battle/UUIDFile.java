@@ -12,6 +12,7 @@ public class UUIDFile {
     public void setData(){
         if(isStarted()){
             try(BufferedReader reader=new BufferedReader(new FileReader("save.txt"))){
+                this.battle.isStart.set(true);
                 String line=null;
                 while((line=reader.readLine())!=null){
                     String[] data=line.split(" ",3);
