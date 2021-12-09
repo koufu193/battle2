@@ -3,9 +3,15 @@ package com.example.battle;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.CommandBlock;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -75,6 +81,42 @@ public class Battle extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(command.getName().equalsIgnoreCase("battle")){
+            if (args.length==3) {
+                if(args[0].equals("give")) {
+                    if (sender instanceof BlockCommandSender) {
+                        for (Entity entity:((BlockCommandSender) sender).getBlock().getLocation().getWorld().getNearbyEntities(((BlockCommandSender) sender).getBlock().getLocation(),1,1,1)){
+                            if (!(entity instanceof Player)) {
+                                continue;
+                            }
+                            if (args[1].equals("sakimori")) {
+                                ItemStack item = new ItemStack(Material.PAPER);
+                                ItemMeta meta = item.getItemMeta();
+                                meta.setDisplayName(ChatColor.valueOf(args[2])+SAKIMORI_AKASHI_NAME);
+                                item.setItemMeta(meta);
+                                entity.getWorld().dropItem(entity.getLocation(), item);
+                            } else if (args[1].equals("kishi")) {
+                                ItemStack item = new ItemStack(Material.PAPER);
+                                ItemMeta meta = item.getItemMeta();
+                                meta.setDisplayName(ChatColor.valueOf(args[2])+KISHI_AKASHI_NAME);
+                                item.setItemMeta(meta);
+                                entity.getWorld().dropItem(entity.getLocation(), item);
+                            } else if (args[1].equals("boumei")) {
+                                ItemStack item = new ItemStack(Material.PAPER);
+                                ItemMeta meta = item.getItemMeta();
+                                if (ChatColor.valueOf(args[2])==ChatColor.DARK_RED) {
+                                    meta.setDisplayName(ChatColor.DARK_RED+"アルティオへの亡命書");
+                                } else if (ChatColor.valueOf(args[2])==ChatColor.DARK_BLUE) {
+                                    meta.setDisplayName(ChatColor.DARK_BLUE+"アプサラスへの亡命書");
+                                }
+                                item.setItemMeta(meta);
+                                entity.getWorld().dropItem(entity.getLocation(), item);
+                            }
+                        }
+
+                    }
+
+                }
+            }
             if(args.length==1){
                 if(args[0].equals("start")) {
                     if (isStart.get()) {
@@ -104,12 +146,12 @@ public class Battle extends JavaPlugin {
                     } else {
                         sender.sendMessage("プレーヤーしか実行できません");
                     }
-                }else if(args[0].equals("stop")){
-                    if(isStart.get()){
+                }else if(args[0].equals("stop")) {
+                    if (isStart.get()) {
                         this.game.finishGame();
-                        Bukkit.getScheduler().runTaskLater(this,bukkitTask -> this.canStart.set(true),this.getConfig().getInt("waitTime")*20);
-                        Bukkit.broadcastMessage(ChatColor.RED+"試合が強制終了されました");
-                    }else{
+                        Bukkit.getScheduler().runTaskLater(this, bukkitTask -> this.canStart.set(true), this.getConfig().getInt("waitTime") * 20);
+                        Bukkit.broadcastMessage(ChatColor.RED + "試合が強制終了されました");
+                    } else {
                         sender.sendMessage("試合が始まっていません");
                     }
                 }else{

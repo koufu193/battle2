@@ -39,6 +39,7 @@ public class EventManager implements Listener {
     }
     @EventHandler
     public void pickupInventoryEvent(EntityPickupItemEvent e){
+        
         if(e.getItem()!=null) {
             if (e.getItem().getItemStack().hasItemMeta()) {
                 if (e.getEntity() instanceof Player) {
