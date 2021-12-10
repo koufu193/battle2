@@ -84,7 +84,7 @@ public class Battle extends JavaPlugin {
             if (args.length==3) {
                 if(args[0].equals("give")) {
                     if (sender instanceof BlockCommandSender) {
-                        for (Entity entity:((BlockCommandSender) sender).getBlock().getLocation().getWorld().getNearbyEntities(((BlockCommandSender) sender).getBlock().getLocation(),1,1,1)){
+                        for (Entity entity:((BlockCommandSender) sender).getBlock().getLocation().getWorld().getNearbyEntities(((BlockCommandSender) sender).getBlock().getLocation(),2,2,2)){
                             if (!(entity instanceof Player)) {
                                 continue;
                             }
@@ -114,7 +114,7 @@ public class Battle extends JavaPlugin {
                         }
 
                     }
-
+                    return false;
                 }
             }
             if(args.length==1){
