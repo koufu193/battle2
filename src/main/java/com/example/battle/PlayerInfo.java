@@ -60,7 +60,7 @@ public class PlayerInfo {
             for(ItemStack item:player.getInventory().getContents()){
                 if(item!=null){
                     if(item.hasItemMeta()){
-                        if(item.getItemMeta().getDisplayName().matches("§.[("+this.battle.KISHI_AKASHI_NAME+")("+ this.battle.SAKIMORI_AKASHI_NAME+")]")){
+                        if(item.getItemMeta().getDisplayName().matches("§."+this.battle.KISHI_AKASHI_NAME)||item.getItemMeta().getDisplayName().matches("§."+this.battle.SAKIMORI_AKASHI_NAME)){
                             player.getInventory().remove(item);
                         }
                     }
