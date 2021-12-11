@@ -11,9 +11,9 @@ public class UUIDFile {
     }
     public void setData(){
         if(isStarted()){
+            this.battle.isStart.set(true);
             try(BufferedReader reader=new BufferedReader(new FileReader("save.txt"))){
-                this.battle.isStart.set(true);
-                String line=null;
+                String line;
                 while((line=reader.readLine())!=null){
                     String[] data=line.split(" ",3);
                     UUID uuid=UUID.fromString(data[0]);
@@ -28,6 +28,9 @@ public class UUIDFile {
         }
     }
     public void saveData() {
+        if(!this.battle.getDataFolder().exists()){
+            this.battle.getDataFolder().mkdir();
+        }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("save.txt"))) {
             for (UUID uuid : this.battle.info.playerColor.keySet()) {
                 String type = null;
@@ -38,6 +41,7 @@ public class UUIDFile {
                 }
                 writer.write(uuid.toString()+" "+this.battle.info.getColorByPlayerName(uuid).name()+" "+(type==null?type:"none")+"\n");
             }
+            writer.flush();
         }catch (IOException e){
             e.printStackTrace();
         }

@@ -1,5 +1,6 @@
 package com.example.battle;
 
+import jdk.jfr.internal.Logger;
 import net.minecraft.server.v1_16_R3.InventoryEnderChest;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -39,18 +40,16 @@ public class EventManager implements Listener {
     }
     @EventHandler
     public void pickupInventoryEvent(EntityPickupItemEvent e){
-        
-        if(e.getItem()!=null) {
-            if (e.getItem().getItemStack().hasItemMeta()) {
-                if (e.getEntity() instanceof Player) {
-                    if(e.getItem().getItemStack().getItemMeta().getDisplayName().matches("§.[("+this.battle.SAKIMORI_AKASHI_NAME+")("+this.battle.KISHI_AKASHI_NAME+")]")) {
-                        if (!this.battle.info.addEffect((Player) e.getEntity(), e.getItem().getItemStack().getItemMeta().getDisplayName())) {
-                            e.setCancelled(true);
-                        }
+        if (e.getItem().getItemStack().hasItemMeta()) {
+            if (e.getEntity() instanceof Player) {
+                if(e.getItem().getItemStack().getItemMeta().getDisplayName().matches("§.[("+this.battle.SAKIMORI_AKASHI_NAME+")("+this.battle.KISHI_AKASHI_NAME+")]")) {
+                    this.battle.getLogger().info(e.getEntity().getName()+":"+e.getItem().getItemStack().getItemMeta().getDisplayName());
+                    if (!this.battle.info.addEffect((Player) e.getEntity(), e.getItem().getItemStack().getItemMeta().getDisplayName())) {
+                        e.setCancelled(true);
                     }
-                } else {
-                    e.setCancelled(true);
                 }
+            } else {
+                e.setCancelled(true);
             }
         }
     }
@@ -67,7 +66,7 @@ public class EventManager implements Listener {
                 e.getItemDrop().remove();
                 PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
                 if(type==null){
-                    e.getPlayer().sendMessage("亡命していないのに亡命所を使わないでください");
+                    e.getPlayer().sendMessage("亡命していないのに亡命書を使わないでください");
                 }else if(type.isBoumei()) {
                     this.battle.info.backColor(e.getPlayer(), false);
                 }

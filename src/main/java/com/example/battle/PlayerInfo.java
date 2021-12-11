@@ -34,6 +34,7 @@ public class PlayerInfo {
         } else {
             PlayerType type=getColor();
             playerColor.put(player.getUniqueId(), type);
+            this.battle.getLogger().info("aaaaaaaa");
             player.setScoreboard(this.battle.scoreboard);
             this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").addEntry(player.getName());
             player.setPlayerListName(type.getColor()+player.getPlayerListName());

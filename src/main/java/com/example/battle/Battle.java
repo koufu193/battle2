@@ -58,7 +58,6 @@ public class Battle extends JavaPlugin {
         scoreboard.registerNewTeam("boumei_team").setPrefix(ChatColor.WHITE.toString());
         if(file.isStarted()){
             file.setData();
-            isStart.set(true);
             Bukkit.getPluginManager().registerEvents(this.manager,this);
             Bukkit.getScheduler().runTaskTimer(this,new Runnable(){
                 PotionEffect kishi=new PotionEffect(PotionEffectType.INCREASE_DAMAGE,90,1);
@@ -169,7 +168,6 @@ public class Battle extends JavaPlugin {
         saveConfig();
         if(isStart.get()){
             file.saveData();
-            this.game.finishGame();
         }
     }
     //-4000 65 0 <-blue spawn
