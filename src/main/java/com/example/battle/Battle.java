@@ -60,8 +60,8 @@ public class Battle extends JavaPlugin {
             file.setData();
             Bukkit.getPluginManager().registerEvents(this.manager,this);
             Bukkit.getScheduler().runTaskTimer(this,new Runnable(){
-                PotionEffect kishi=new PotionEffect(PotionEffectType.INCREASE_DAMAGE,90,1);
-                PotionEffect sakimori=new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,90,1);
+                PotionEffect kishi=new PotionEffect(PotionEffectType.INCREASE_DAMAGE,90*20,1);
+                PotionEffect sakimori=new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,90*20,1);
                 @Override
                 public void run() {
                     for (String str : kishi_sakimori_data.keySet()) {
@@ -73,7 +73,7 @@ public class Battle extends JavaPlugin {
                         e.printStackTrace();
                     }
                 }
-            },0,90*20);
+            },0,60*20);
         }
     }
 

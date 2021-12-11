@@ -42,11 +42,21 @@ public class EventManager implements Listener {
     public void pickupInventoryEvent(EntityPickupItemEvent e){
         if (e.getItem().getItemStack().hasItemMeta()) {
             if (e.getEntity() instanceof Player) {
-                if(e.getItem().getItemStack().getItemMeta().getDisplayName().matches("§.[("+this.battle.SAKIMORI_AKASHI_NAME+")("+this.battle.KISHI_AKASHI_NAME+")]")) {
-                    this.battle.getLogger().info(e.getEntity().getName()+":"+e.getItem().getItemStack().getItemMeta().getDisplayName());
+                if(e.getItem().getItemStack().getItemMeta().getDisplayName().matches("§."+this.battle.SAKIMORI_AKASHI_NAME)||e.getItem().getItemStack().getItemMeta().getDisplayName().matches("§."+this.battle.KISHI_AKASHI_NAME)) {
                     if (!this.battle.info.addEffect((Player) e.getEntity(), e.getItem().getItemStack().getItemMeta().getDisplayName())) {
                         e.setCancelled(true);
                     }
+                }else if(e.getItem().getItemStack().getItemMeta().getDisplayName().equals(ChatColor.DARK_RED+"アルティオへの亡命書")||e.getItem().getItemStack().getItemMeta().getDisplayName().equals(ChatColor.DARK_BLUE+"アプサラスへの亡命書")){
+                    PlayerType type=battle.info.getColorByPlayerName(e.getEntity().getUniqueId());
+                    if(type!=null){
+                        if(!type.isBoumei()){
+                            if(e.getItem().getItemStack().getItemMeta().getDisplayName().matches(type.getColor()+".*")){
+                                this.battle.info.boumeiPlayer((Player) e.getEntity());
+                                return;
+                            }
+                        }
+                    }
+                    e.setCancelled(true);
                 }
             } else {
                 e.setCancelled(true);
@@ -65,10 +75,10 @@ public class EventManager implements Listener {
             }else if(e.getItemDrop().getItemStack().getItemMeta().getDisplayName().matches("[("+ChatColor.DARK_RED+"アルティオ)("+ChatColor.DARK_BLUE+"アプサラス)]への亡命書")){
                 e.getItemDrop().remove();
                 PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
-                if(type==null){
-                    e.getPlayer().sendMessage("亡命していないのに亡命書を使わないでください");
-                }else if(type.isBoumei()) {
-                    this.battle.info.backColor(e.getPlayer(), false);
+                if(type!=null){
+                    if(type.isBoumei()) {
+                        this.battle.info.backColor(e.getPlayer(), false);
+                    }
                 }
             }
         }
@@ -78,7 +88,7 @@ public class EventManager implements Listener {
         if(e.getCurrentItem()!=null){
             if(e.getCurrentItem().hasItemMeta()&&this.battle.info.getColorByPlayerName(e.getWhoClicked().getUniqueId())!=null){
                 PlayerType type=this.battle.info.getColorByPlayerName(e.getWhoClicked().getUniqueId());
-                if(e.getCurrentItem().getItemMeta().getDisplayName().matches(type.isBoumei()?"§.":type.getChangeColor()+"[("+this.battle.KISHI_AKASHI_NAME+")("+this.battle.SAKIMORI_AKASHI_NAME+")]")){
+                if(e.getCurrentItem().getItemMeta().getDisplayName().matches("§."+this.battle.KISHI_AKASHI_NAME)||e.getCurrentItem().getItemMeta().getDisplayName().matches("§."+this.battle.SAKIMORI_AKASHI_NAME)||e.getCurrentItem().getItemMeta().getDisplayName().equals(ChatColor.DARK_RED+"アルティオへの亡命書")||e.getCurrentItem().getItemMeta().getDisplayName().equals(ChatColor.DARK_BLUE+"アプサラスへの亡命書")){
                     e.setCancelled(true);
                 }
             }
@@ -91,30 +101,9 @@ public class EventManager implements Listener {
         for(ItemStack item:e.getPlayer().getInventory().getContents()){
             if(item!=null){
                 if(item.hasItemMeta()){
-                    if(item.getItemMeta().getDisplayName().matches("§.[("+this.battle.SAKIMORI_AKASHI_NAME+")("+this.battle.KISHI_AKASHI_NAME+")]")) {
+                    if(item.getItemMeta().getDisplayName().matches("§."+this.battle.SAKIMORI_AKASHI_NAME)||item.getItemMeta().getDisplayName().matches("§."+this.battle.KISHI_AKASHI_NAME)) {
                         if (!this.battle.info.addEffect((Player) e.getPlayer(), item.getItemMeta().getDisplayName())) {
                             e.getPlayer().getInventory().remove(item);
-                        }
-                    }
-                    if(type!=null&&!hasBoumei){
-                        if(type.isBoumei()){
-                            if(item.getItemMeta().getDisplayName().matches("[("+ChatColor.DARK_RED+"アルティオ)("+ChatColor.DARK_BLUE+"アプサラス)]への亡命書")){
-                                hasBoumei=true;
-                            }
-                        }else{
-                            hasBoumei=true;
-                        }
-                    }
-                }
-            }
-        }
-        if(!hasBoumei&&type.isBoumei()){
-            this.battle.info.backColor((Player) e.getPlayer(),false);
-            for(ItemStack item:e.getView().getTopInventory().getContents()){
-                if(item!=null) {
-                    if(item.hasItemMeta()) {
-                        if (item.getItemMeta().getDisplayName().matches("[(" + ChatColor.DARK_RED + "アルティオ)(" + ChatColor.DARK_BLUE + "アプサラス)]への亡命書")) {
-                            e.getView().getBottomInventory().remove(item);
                         }
                     }
                 }
@@ -155,7 +144,6 @@ public class EventManager implements Listener {
     public void RespawnEvent(PlayerRespawnEvent e){
         PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
         if(type!=null){
-            System.out.println("aaaa");
             e.setRespawnLocation(type.getBeenColor()==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
             //e.getPlayer().teleport(type.getBeenColor()==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
         }
@@ -167,6 +155,8 @@ public class EventManager implements Listener {
     @EventHandler
     public void deathEvent(PlayerDeathEvent e){
         if(this.battle.info.getColorByPlayerName(e.getEntity().getUniqueId()).isBoumei()){
+            e.setKeepInventory(true);
+            e.getEntity().getInventory().clear();
             this.battle.info.backColor(e.getEntity(),true);
         }
     }

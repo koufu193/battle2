@@ -39,7 +39,7 @@ public class UUIDFile {
                         type = key;
                     }
                 }
-                writer.write(uuid.toString()+" "+this.battle.info.getColorByPlayerName(uuid).name()+" "+(type==null?type:"none")+"\n");
+                writer.write(uuid.toString()+" "+this.battle.info.getColorByPlayerName(uuid).name()+" "+(type!=null?type:"none")+"\n");
             }
             writer.flush();
         }catch (IOException e){

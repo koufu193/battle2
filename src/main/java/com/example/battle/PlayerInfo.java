@@ -34,7 +34,6 @@ public class PlayerInfo {
         } else {
             PlayerType type=getColor();
             playerColor.put(player.getUniqueId(), type);
-            this.battle.getLogger().info("aaaaaaaa");
             player.setScoreboard(this.battle.scoreboard);
             this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").addEntry(player.getName());
             player.setPlayerListName(type.getColor()+player.getPlayerListName());
@@ -94,23 +93,27 @@ public class PlayerInfo {
             playerColor.put(player.getUniqueId(),type.getBeenColor());
             this.battle.scoreboard.getTeam(type.getBeenColor()==PlayerType.BLUE?"blue_team":"red_team").addEntry(player.getName());
             player.setPlayerListName(type.getBeenColor().getColor()+player.getPlayerListName());
-            player.teleport(type.getBeenColor()==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
+            if(!isKilled){
+                player.teleport(type.getBeenColor()==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
+            }
         }
     }
     //ポーションを上げれたらtrue、違うチームとかであげれなかったらfalse
     public boolean addEffect(Player p,String itemName){
         if(playerColor.containsKey(p.getUniqueId())){
             ChatColor color=playerColor.get(p.getUniqueId()).getColor();
-            if(itemName.matches(color+"[("+ battle.SAKIMORI_AKASHI_NAME+")("+ battle.KISHI_AKASHI_NAME+")]")&&!playerColor.get(p.getUniqueId()).isBoumei()){
+            if((itemName.equals(color+this.battle.SAKIMORI_AKASHI_NAME)||itemName.equals(color+this.battle.KISHI_AKASHI_NAME))&&!playerColor.get(p.getUniqueId()).isBoumei()){
                 boolean isSakimori=itemName.matches(color+ battle.SAKIMORI_AKASHI_NAME);
                 if(!this.battle.kishi_sakimori_data.get(isSakimori?battle.KISHI_AKASHI_NAME:battle.SAKIMORI_AKASHI_NAME).contains(p.getUniqueId())) {
-                    PotionEffectType type = isSakimori ? PotionEffectType.DAMAGE_RESISTANCE : PotionEffectType.INCREASE_DAMAGE;
-                    p.addPotionEffect(new PotionEffect(type, 90, 1));
-                    this.battle.kishi_sakimori_data.get(isSakimori? battle.SAKIMORI_AKASHI_NAME : battle.KISHI_AKASHI_NAME).add(p.getUniqueId());
-                    return true;
+                    if(!this.battle.kishi_sakimori_data.get(isSakimori?battle.SAKIMORI_AKASHI_NAME:battle.KISHI_AKASHI_NAME).contains(p.getUniqueId())) {
+                        PotionEffectType type = isSakimori ? PotionEffectType.DAMAGE_RESISTANCE : PotionEffectType.INCREASE_DAMAGE;
+                        p.addPotionEffect(new PotionEffect(type, 90 * 20, 1));
+                        this.battle.kishi_sakimori_data.get(isSakimori ? battle.SAKIMORI_AKASHI_NAME : battle.KISHI_AKASHI_NAME).add(p.getUniqueId());
+                        return true;
+                    }
                 }else{
                     p.removePotionEffect(isSakimori?PotionEffectType.INCREASE_DAMAGE:PotionEffectType.DAMAGE_RESISTANCE);
-                    Arrays.asList(p.getInventory().getContents()).removeIf(b->b.hasItemMeta()?b.getItemMeta().getDisplayName().matches("§.[("+this.battle.SAKIMORI_AKASHI_NAME+")("+ battle.KISHI_AKASHI_NAME+")]"):false);
+                    Arrays.stream(p.getInventory().getContents()).filter(b->b!=null).filter(b-> b.hasItemMeta() && (b.getItemMeta().getDisplayName().matches("§." + this.battle.SAKIMORI_AKASHI_NAME) || b.getItemMeta().getDisplayName().matches("§." + battle.KISHI_AKASHI_NAME))).forEach(b->p.getInventory().remove(b));
                     for(String str:this.battle.kishi_sakimori_data.keySet()){
                         this.battle.kishi_sakimori_data.get(str).remove(p.getUniqueId());
                     }
