@@ -12,7 +12,7 @@ public class UUIDFile {
     public void setData(){
         if(isStarted()){
             this.battle.isStart.set(true);
-            try(BufferedReader reader=new BufferedReader(new FileReader("save.txt"))){
+            try(BufferedReader reader=new BufferedReader(new FileReader(new File(this.battle.getDataFolder(),"save.txt")))){
                 String line;
                 while((line=reader.readLine())!=null){
                     String[] data=line.split(" ",3);
@@ -31,7 +31,7 @@ public class UUIDFile {
         if(!this.battle.getDataFolder().exists()){
             this.battle.getDataFolder().mkdir();
         }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("save.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(this.battle.getDataFolder(),"save.txt")))) {
             for (UUID uuid : this.battle.info.playerColor.keySet()) {
                 String type = null;
                 for (String key : this.battle.kishi_sakimori_data.keySet()) {
