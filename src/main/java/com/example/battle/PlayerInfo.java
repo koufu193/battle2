@@ -74,6 +74,7 @@ public class PlayerInfo {
         }else if(!playerColor.get(player.getUniqueId()).isBoumei()){
             boumeiPlayer(player);
         }else{
+            Bukkit.broadcastMessage(player.getName()+ChatColor.GREEN+"は亡命に成功した!");
             PlayerType type=playerColor.get(player.getUniqueId()).getBeenColor().getChangeColor();
             playerColor.put(player.getUniqueId(), type);
             this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"red_team":"blue_team").addEntry(player.getName());

@@ -72,24 +72,13 @@ public class EventManager implements Listener {
             }else if(e.getItemDrop().getItemStack().getItemMeta().getDisplayName().matches("§."+this.battle.SAKIMORI_AKASHI_NAME)){
                 this.battle.kishi_sakimori_data.get(this.battle.SAKIMORI_AKASHI_NAME).remove(e.getPlayer().getName());
                 e.getPlayer().removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
-            }else if(e.getItemDrop().getItemStack().getItemMeta().getDisplayName().matches("[("+ChatColor.DARK_RED+"アルティオ)("+ChatColor.DARK_BLUE+"アプサラス)]への亡命書")){
+            }else if(e.getItemDrop().getItemStack().getItemMeta().getDisplayName().equals(ChatColor.DARK_RED+"アルティオへの亡命書")||e.getItemDrop().getItemStack().getItemMeta().getDisplayName().equals(ChatColor.DARK_BLUE+"アプサラへの亡命書")){
                 e.getItemDrop().remove();
                 PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
                 if(type!=null){
                     if(type.isBoumei()) {
                         this.battle.info.backColor(e.getPlayer(), false);
                     }
-                }
-            }
-        }
-    }
-    @EventHandler
-    public void clickInventoryEvent(InventoryClickEvent e){
-        if(e.getCurrentItem()!=null){
-            if(e.getCurrentItem().hasItemMeta()&&this.battle.info.getColorByPlayerName(e.getWhoClicked().getUniqueId())!=null){
-                PlayerType type=this.battle.info.getColorByPlayerName(e.getWhoClicked().getUniqueId());
-                if(e.getCurrentItem().getItemMeta().getDisplayName().matches("§."+this.battle.KISHI_AKASHI_NAME)||e.getCurrentItem().getItemMeta().getDisplayName().matches("§."+this.battle.SAKIMORI_AKASHI_NAME)||e.getCurrentItem().getItemMeta().getDisplayName().equals(ChatColor.DARK_RED+"アルティオへの亡命書")||e.getCurrentItem().getItemMeta().getDisplayName().equals(ChatColor.DARK_BLUE+"アプサラスへの亡命書")){
-                    e.setCancelled(true);
                 }
             }
         }
@@ -105,8 +94,21 @@ public class EventManager implements Listener {
                         if (!this.battle.info.addEffect((Player) e.getPlayer(), item.getItemMeta().getDisplayName())) {
                             e.getPlayer().getInventory().remove(item);
                         }
+                    }else if(item.getItemMeta().getDisplayName().equals(ChatColor.DARK_RED+"アルティオへの亡命書")||item.getItemMeta().getDisplayName().equals(ChatColor.DARK_BLUE+"アプサラへの亡命書")){
+                        if(type!=null) {
+                            if (type.isBoumei()) {
+                                hasBoumei = true;
+                            }else{
+                                e.getPlayer().getInventory().remove(item);
+                            }
+                        }
                     }
                 }
+            }
+        }
+        if(!hasBoumei&&type!=null){
+            if(type.isBoumei()){
+                this.battle.info.backColor((Player) e.getPlayer(),false);
             }
         }
     }
