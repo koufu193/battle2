@@ -35,6 +35,7 @@ public class Battle extends JavaPlugin {
     Location red_spawn_location;
     Map<PlayerType,List<Location>> chestData=new HashMap<>();
     UUIDFile file=new UUIDFile(this);
+    BannerEvent event=new BannerEvent(this);
     @Override
     public void onEnable() {
         saveDefaultConfig();
@@ -62,6 +63,7 @@ public class Battle extends JavaPlugin {
         if(file.isStarted()){
             file.setData();
             Bukkit.getPluginManager().registerEvents(this.manager,this);
+            Bukkit.getPluginManager().registerEvents(this.event,this);
             Bukkit.getScheduler().runTaskTimer(this,new Runnable(){
                 PotionEffect kishi=new PotionEffect(PotionEffectType.INCREASE_DAMAGE,90*20,1);
                 PotionEffect sakimori=new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,90*20,1);
@@ -112,6 +114,26 @@ public class Battle extends JavaPlugin {
                                 }
                                 item.setItemMeta(meta);
                                 entity.getWorld().dropItem(entity.getLocation(), item);
+                            }else if(args[1].equals("hata")){
+                                ItemStack item;
+                                ItemMeta meta;
+                                switch (ChatColor.valueOf(args[2])){
+                                    case DARK_RED:
+                                        item=new ItemStack(Material.RED_BANNER);
+                                        meta=item.getItemMeta();
+                                        meta.setDisplayName(ChatColor.DARK_RED+"アルティオ制圧旗");
+                                        item.setItemMeta(meta);
+                                        break;
+                                    case DARK_BLUE:
+                                        item=new ItemStack(Material.RED_BANNER);
+                                        meta=item.getItemMeta();
+                                        meta.setDisplayName(ChatColor.DARK_BLUE+"アプサラス制圧旗");
+                                        item.setItemMeta(meta);
+                                        break;
+                                    default:
+                                        return false;
+                                }
+                                entity.getWorld().dropItem(entity.getLocation(),item);
                             }
                         }
 
@@ -157,10 +179,10 @@ public class Battle extends JavaPlugin {
                         sender.sendMessage("試合が始まっていません");
                     }
                 }else{
-                    sender.sendMessage("コマンドの構文が違います(battle <start/reload/tp/stop>)");
+                    sender.sendMessage("コマンドの構文が違います(battle <start/reload/tp/stop/give(コマンドブロックのみ)>)");
                 }
             }else{
-                sender.sendMessage("コマンドの構文が違います(battle <start/reload/tp/stop>)");
+                sender.sendMessage("コマンドの構文が違います(battle <start/reload/tp/stop/give(コマンドブロックのみ)>)");
             }
         }
         return false;

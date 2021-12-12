@@ -1,10 +1,9 @@
 #新しくワールド作るときの名まえ
-newWorldName: "world1"
+newWorldName: "world"
 #終わったときにテレポートするワールド
-FinishedTeleportWorld: "world"
+FinishedTeleportWorld: "world_nether"
 #ワールド生成のためのクールダウンの時間
 waitTime: 5
-isStart: false
 #場所
 Locations:
   #終わったときにテレポートする場所

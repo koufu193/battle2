@@ -57,6 +57,11 @@ public class EventManager implements Listener {
                         }
                     }
                     e.setCancelled(true);
+                }else if(e.getItem().getItemStack().getItemMeta().getDisplayName().equals(ChatColor.DARK_RED+"アルティオ制圧旗")||e.getItem().getItemStack().getItemMeta().getDisplayName().equals(ChatColor.DARK_BLUE+"アプサラス制圧旗")){
+                    PlayerType type=this.battle.info.getColorByPlayerName(e.getEntity().getUniqueId());
+                    if(type!=null&&!e.getItem().getItemStack().getItemMeta().getDisplayName().matches(type.getColor()+".*")){
+                        e.setCancelled(true);
+                    }
                 }
             } else {
                 e.setCancelled(true);
@@ -67,11 +72,15 @@ public class EventManager implements Listener {
     public void dropInventoryEvent(PlayerDropItemEvent e){
         if(e.getItemDrop().getItemStack().hasItemMeta()){
             if(e.getItemDrop().getItemStack().getItemMeta().getDisplayName().matches("§."+this.battle.KISHI_AKASHI_NAME)){
-                this.battle.kishi_sakimori_data.get(this.battle.KISHI_AKASHI_NAME).remove(e.getPlayer().getName());
-                e.getPlayer().removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+                if(!Arrays.stream(e.getPlayer().getInventory().getContents()).anyMatch(b->b.isSimilar(e.getItemDrop().getItemStack()))) {
+                    this.battle.kishi_sakimori_data.get(this.battle.KISHI_AKASHI_NAME).remove(e.getPlayer().getUniqueId());
+                    e.getPlayer().removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+                }
             }else if(e.getItemDrop().getItemStack().getItemMeta().getDisplayName().matches("§."+this.battle.SAKIMORI_AKASHI_NAME)){
-                this.battle.kishi_sakimori_data.get(this.battle.SAKIMORI_AKASHI_NAME).remove(e.getPlayer().getName());
-                e.getPlayer().removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
+                if(!Arrays.stream(e.getPlayer().getInventory().getContents()).anyMatch(b->b.isSimilar(e.getItemDrop().getItemStack()))) {
+                    this.battle.kishi_sakimori_data.get(this.battle.SAKIMORI_AKASHI_NAME).remove(e.getPlayer().getUniqueId());
+                    e.getPlayer().removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
+                }
             }else if(e.getItemDrop().getItemStack().getItemMeta().getDisplayName().equals(ChatColor.DARK_RED+"アルティオへの亡命書")||e.getItemDrop().getItemStack().getItemMeta().getDisplayName().equals(ChatColor.DARK_BLUE+"アプサラスへの亡命書")){
                 e.getItemDrop().remove();
                 PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
@@ -90,9 +99,11 @@ public class EventManager implements Listener {
         for(ItemStack item:e.getPlayer().getInventory().getContents()){
             if(item!=null){
                 if(item.hasItemMeta()){
-                    if(item.getItemMeta().getDisplayName().matches("§."+this.battle.SAKIMORI_AKASHI_NAME)||item.getItemMeta().getDisplayName().matches("§."+this.battle.KISHI_AKASHI_NAME)) {
-                        if (!this.battle.info.addEffect((Player) e.getPlayer(), item.getItemMeta().getDisplayName())) {
-                            e.getPlayer().getInventory().remove(item);
+                    if((item.getItemMeta().getDisplayName().matches("§."+this.battle.SAKIMORI_AKASHI_NAME)||item.getItemMeta().getDisplayName().matches("§."+this.battle.KISHI_AKASHI_NAME))) {
+                        if(!this.battle.kishi_sakimori_data.get(item.getItemMeta().getDisplayName().replaceAll("§.","")).contains(e.getPlayer().getUniqueId())) {
+                            if (!this.battle.info.addEffect((Player) e.getPlayer(), item.getItemMeta().getDisplayName())) {
+                                e.getPlayer().getInventory().remove(item);
+                            }
                         }
                     }else if(item.getItemMeta().getDisplayName().equals(ChatColor.DARK_RED+"アルティオへの亡命書")||item.getItemMeta().getDisplayName().equals(ChatColor.DARK_BLUE+"アプサラスへの亡命書")){
                         if(type!=null) {

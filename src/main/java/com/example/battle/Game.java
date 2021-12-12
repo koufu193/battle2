@@ -22,6 +22,7 @@ public class Game {
             this.battle.info.addPlayer(p);
         }
         Bukkit.getPluginManager().registerEvents(this.battle.manager,this.battle);
+        Bukkit.getPluginManager().registerEvents(this.battle.event,this.battle);
         this.battle.blue_spawn_location.getBlock().setType(Material.END_PORTAL);
         this.battle.red_spawn_location.getBlock().setType(Material.END_PORTAL);
         Bukkit.getScheduler().runTaskTimer(this.battle,new Runnable(){
