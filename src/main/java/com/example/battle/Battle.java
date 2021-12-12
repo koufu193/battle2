@@ -38,6 +38,9 @@ public class Battle extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        if(!getDataFolder().exists()){
+            getDataFolder().mkdir();
+        }
         List<Location> data=new ArrayList<>();
         for(String str:getConfig().getConfigurationSection("Locations.redChestLocations").getKeys(false)){
             data.add(this.util.getLocationByConfig(getConfig(),"Locations.redChestLocations",str));
@@ -166,6 +169,7 @@ public class Battle extends JavaPlugin {
     @Override
     public void onDisable() {
         saveConfig();
+        reloadConfig();
         if(isStart.get()){
             file.saveData();
         }

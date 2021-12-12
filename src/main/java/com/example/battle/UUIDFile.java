@@ -28,9 +28,6 @@ public class UUIDFile {
         }
     }
     public void saveData() {
-        if(!this.battle.getDataFolder().exists()){
-            this.battle.getDataFolder().mkdir();
-        }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(this.battle.getDataFolder(),"save.txt")))) {
             for (UUID uuid : this.battle.info.playerColor.keySet()) {
                 String type = null;

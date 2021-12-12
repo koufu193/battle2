@@ -72,7 +72,7 @@ public class EventManager implements Listener {
             }else if(e.getItemDrop().getItemStack().getItemMeta().getDisplayName().matches("§."+this.battle.SAKIMORI_AKASHI_NAME)){
                 this.battle.kishi_sakimori_data.get(this.battle.SAKIMORI_AKASHI_NAME).remove(e.getPlayer().getName());
                 e.getPlayer().removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
-            }else if(e.getItemDrop().getItemStack().getItemMeta().getDisplayName().equals(ChatColor.DARK_RED+"アルティオへの亡命書")||e.getItemDrop().getItemStack().getItemMeta().getDisplayName().equals(ChatColor.DARK_BLUE+"アプサラへの亡命書")){
+            }else if(e.getItemDrop().getItemStack().getItemMeta().getDisplayName().equals(ChatColor.DARK_RED+"アルティオへの亡命書")||e.getItemDrop().getItemStack().getItemMeta().getDisplayName().equals(ChatColor.DARK_BLUE+"アプサラスへの亡命書")){
                 e.getItemDrop().remove();
                 PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
                 if(type!=null){
@@ -94,7 +94,7 @@ public class EventManager implements Listener {
                         if (!this.battle.info.addEffect((Player) e.getPlayer(), item.getItemMeta().getDisplayName())) {
                             e.getPlayer().getInventory().remove(item);
                         }
-                    }else if(item.getItemMeta().getDisplayName().equals(ChatColor.DARK_RED+"アルティオへの亡命書")||item.getItemMeta().getDisplayName().equals(ChatColor.DARK_BLUE+"アプサラへの亡命書")){
+                    }else if(item.getItemMeta().getDisplayName().equals(ChatColor.DARK_RED+"アルティオへの亡命書")||item.getItemMeta().getDisplayName().equals(ChatColor.DARK_BLUE+"アプサラスへの亡命書")){
                         if(type!=null) {
                             if (type.isBoumei()) {
                                 hasBoumei = true;
