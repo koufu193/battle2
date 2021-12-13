@@ -15,8 +15,8 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class BannerEvent implements Listener {
     Battle battle;
-    Runnable red_banner_timer;
-    Runnable blue_banner_timer;
+    BannerRunnable red_banner_timer;
+    BannerRunnable blue_banner_timer;
     BukkitTask red;
     BukkitTask blue;
     final String RED_BANNER=ChatColor.DARK_RED+"アルティオ制圧旗";

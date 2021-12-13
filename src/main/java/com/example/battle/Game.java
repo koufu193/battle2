@@ -45,6 +45,7 @@ public class Game {
             this.battle.kishi_sakimori_data.get(str).clear();
         }
         this.battle.isStart.set(false);
+        new File(this.battle.getDataFolder(),"banner.txt").delete();
         new File(this.battle.getDataFolder(),"save.txt").delete();
         if(location==null){
             this.battle.getLogger().warning("テレポート先が見つかりません");

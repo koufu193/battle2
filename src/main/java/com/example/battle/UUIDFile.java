@@ -1,5 +1,9 @@
 package com.example.battle;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+
 import java.io.*;
 import java.util.UUID;
 
@@ -25,6 +29,24 @@ public class UUIDFile {
             }catch (IOException e){
                 e.printStackTrace();
             }
+            try(BufferedReader reader=new BufferedReader(new FileReader(new File(this.battle.getDataFolder(),"save.txt")))){
+                String line;
+                for(int i=0;i<2;i++){
+                    line=reader.readLine();
+                    if(line!=null&&!line.equals("null")) {
+                        String[] data = line.split("", 6);
+                        if(i==1) {
+                            this.battle.event.RedBanner = new Location(Bukkit.getWorld(this.battle.util.getWorldName()), Double.parseDouble(data[0]), Double.parseDouble(data[1]), Double.parseDouble(data[2]));
+                            this.battle.event.red_banner_timer = new BannerRunnable(data[4], Integer.parseInt(data[3]), this.battle.getConfig().getInt("Time"), ChatColor.valueOf(data[5]), this.battle);
+                        }else{
+                            this.battle.event.BlueBanner = new Location(Bukkit.getWorld(this.battle.util.getWorldName()), Double.parseDouble(data[0]), Double.parseDouble(data[1]), Double.parseDouble(data[2]));
+                            this.battle.event.blue_banner_timer = new BannerRunnable(data[4], Integer.parseInt(data[3]), this.battle.getConfig().getInt("Time"), ChatColor.valueOf(data[5]), this.battle);
+                        }
+                    }
+                }
+            }catch (IOException e){
+                e.printStackTrace();
+            }
         }
     }
     public void saveData() {
@@ -37,6 +59,20 @@ public class UUIDFile {
                     }
                 }
                 writer.write(uuid.toString()+" "+this.battle.info.getColorByPlayerName(uuid).name()+" "+(type!=null?type:"none")+"\n");
+            }
+            writer.flush();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(this.battle.getDataFolder(),"banner.txt")))) {
+            if(this.battle.event.RedBanner!=null){
+                writer.write(this.battle.event.RedBanner.getX()+" "+this.battle.event.RedBanner.getY()+" "+this.battle.event.RedBanner.getZ()+" "+this.battle.event.red_banner_timer.now+" "+this.battle.event.red_banner_timer.title+" "+this.battle.event.red_banner_timer.color);
+            }else{
+                writer.write("null");
+            }
+            if(this.battle.event.RedBanner!=null){
+                writer.write(this.battle.event.BlueBanner.getX()+" "+this.battle.event.BlueBanner.getY()+" "+this.battle.event.BlueBanner.getZ()+" "+this.battle.event.blue_banner_timer.now+" "+this.battle.event.blue_banner_timer.title+" "+this.battle.event.blue_banner_timer.color);
+                writer.write("null");
             }
             writer.flush();
         }catch (IOException e){
