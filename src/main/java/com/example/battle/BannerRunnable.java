@@ -26,7 +26,7 @@ public class BannerRunnable implements Runnable {
             }else if(now+1!=max) {
                 p.sendTitle(color + title + "チーム、制圧まであと" + (max - now) + "時間","", 10, 10, 10);
             }else{
-                p.sendTitle(color+title+"の勝利!","",10,10,10);
+                p.sendTitle(color+title+"チームの勝利!","",10,10,10);
             }
         }
         if(now==max) {
