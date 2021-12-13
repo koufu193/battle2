@@ -50,16 +50,16 @@ public class EventManager implements Listener {
                     PlayerType type=battle.info.getColorByPlayerName(e.getEntity().getUniqueId());
                     if(type!=null){
                         if(!type.isBoumei()){
-                            if(e.getItem().getItemStack().getItemMeta().getDisplayName().matches(type.getColor()+".*")){
+                            if(e.getItem().getItemStack().getItemMeta().getDisplayName().matches(type.getChangeColor().getColor()+".*")){
                                 this.battle.info.boumeiPlayer((Player) e.getEntity());
                                 return;
                             }
                         }
                     }
                     e.setCancelled(true);
-                }else if(e.getItem().getItemStack().getItemMeta().getDisplayName().equals(ChatColor.DARK_RED+"アルティオ制圧旗")||e.getItem().getItemStack().getItemMeta().getDisplayName().equals(ChatColor.DARK_BLUE+"アプサラス制圧旗")){
+                }else if(e.getItem().getItemStack().getItemMeta().getDisplayName().equals(this.battle.event.RED_BANNER)||e.getItem().getItemStack().getItemMeta().getDisplayName().equals(this.battle.event.BLUE_BANNER)){
                     PlayerType type=this.battle.info.getColorByPlayerName(e.getEntity().getUniqueId());
-                    if(type!=null&&!e.getItem().getItemStack().getItemMeta().getDisplayName().matches(type.getColor()+".*")){
+                    if(type!=null&&!e.getItem().getItemStack().getItemMeta().getDisplayName().matches(type.getChangeColor().getColor()+".*")){
                         e.setCancelled(true);
                     }
                 }
@@ -72,12 +72,12 @@ public class EventManager implements Listener {
     public void dropInventoryEvent(PlayerDropItemEvent e){
         if(e.getItemDrop().getItemStack().hasItemMeta()){
             if(e.getItemDrop().getItemStack().getItemMeta().getDisplayName().matches("§."+this.battle.KISHI_AKASHI_NAME)){
-                if(!Arrays.stream(e.getPlayer().getInventory().getContents()).anyMatch(b->b.isSimilar(e.getItemDrop().getItemStack()))) {
+                if(!Arrays.stream(e.getPlayer().getInventory().getContents()).filter(b->b!=null).anyMatch(b->e.getItemDrop().getItemStack().isSimilar(b))) {
                     this.battle.kishi_sakimori_data.get(this.battle.KISHI_AKASHI_NAME).remove(e.getPlayer().getUniqueId());
                     e.getPlayer().removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
                 }
             }else if(e.getItemDrop().getItemStack().getItemMeta().getDisplayName().matches("§."+this.battle.SAKIMORI_AKASHI_NAME)){
-                if(!Arrays.stream(e.getPlayer().getInventory().getContents()).anyMatch(b->b.isSimilar(e.getItemDrop().getItemStack()))) {
+                if(!Arrays.stream(e.getPlayer().getInventory().getContents()).filter(b->b!=null).anyMatch(b->b.isSimilar(e.getItemDrop().getItemStack()))) {
                     this.battle.kishi_sakimori_data.get(this.battle.SAKIMORI_AKASHI_NAME).remove(e.getPlayer().getUniqueId());
                     e.getPlayer().removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
                 }
@@ -112,6 +112,10 @@ public class EventManager implements Listener {
                             }else{
                                 e.getPlayer().getInventory().remove(item);
                             }
+                        }
+                    }else if(item.getItemMeta().getDisplayName().equals(this.battle.event.RED_BANNER)||item.getItemMeta().getDisplayName().equals(this.battle.event.BLUE_BANNER)){
+                        if(type!=null&&!item.getItemMeta().getDisplayName().matches(type.getChangeColor().getColor()+".*")){
+                            e.getPlayer().getInventory().remove(item);
                         }
                     }
                 }

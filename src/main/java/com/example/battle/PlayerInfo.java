@@ -34,10 +34,12 @@ public class PlayerInfo {
         } else {
             PlayerType type=getColor();
             playerColor.put(player.getUniqueId(), type);
-            player.setScoreboard(this.battle.scoreboard);
             this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").addEntry(player.getName());
             player.setPlayerListName(type.getColor()+player.getPlayerListName());
             player.teleport(type==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
+            for(Player p:Bukkit.getOnlinePlayers()){
+                p.setScoreboard(this.battle.scoreboard);
+            }
         }
     }
     public void boumeiPlayer(Player player){
@@ -50,8 +52,11 @@ public class PlayerInfo {
             PlayerType type=playerColor.get(player.getUniqueId());
             this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").removeEntry(player.getName());
             this.battle.scoreboard.getTeam("boumei_team").addEntry(player.getName());
+            for(Player p:Bukkit.getOnlinePlayers()){
+                p.setScoreboard(this.battle.scoreboard);
+            }
             playerColor.put(player.getUniqueId(),type.getBoumei());
-            Bukkit.broadcastMessage(player.getName()+ChatColor.RED+"が亡命を図った("+type.getChangeColor().getColor().name()+"チームを目指しています)");
+            Bukkit.broadcastMessage(player.getName()+ChatColor.RED+"が亡命を図った("+(type==PlayerType.BLUE?"アルティオ":"アプサラス")+"チームを目指しています)");
             for(String str:this.battle.kishi_sakimori_data.keySet()){
                 if(this.battle.kishi_sakimori_data.get(str).contains(player.getUniqueId())){
                     this.battle.kishi_sakimori_data.get(str).remove(player.getUniqueId());
@@ -60,7 +65,7 @@ public class PlayerInfo {
             for(ItemStack item:player.getInventory().getContents()){
                 if(item!=null){
                     if(item.hasItemMeta()){
-                        if(item.getItemMeta().getDisplayName().matches("§."+this.battle.KISHI_AKASHI_NAME)||item.getItemMeta().getDisplayName().matches("§."+this.battle.SAKIMORI_AKASHI_NAME)){
+                        if(item.getItemMeta().getDisplayName().matches("§."+this.battle.KISHI_AKASHI_NAME)||item.getItemMeta().getDisplayName().matches("§."+this.battle.SAKIMORI_AKASHI_NAME)||item.getItemMeta().getDisplayName().equals(this.battle.event.RED_BANNER)||item.getItemMeta().getDisplayName().equals(this.battle.event.BLUE_BANNER)){
                             player.getInventory().remove(item);
                         }
                     }
@@ -77,8 +82,11 @@ public class PlayerInfo {
             Bukkit.broadcastMessage(player.getName()+ChatColor.GREEN+"は亡命に成功した!");
             PlayerType type=playerColor.get(player.getUniqueId()).getBeenColor().getChangeColor();
             playerColor.put(player.getUniqueId(), type);
+            this.battle.scoreboard.getTeam("boumei_team").removeEntry(player.getName());
             this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"red_team":"blue_team").addEntry(player.getName());
-            this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").removeEntry(player.getName());
+            for(Player p:Bukkit.getOnlinePlayers()){
+                p.setScoreboard(this.battle.scoreboard);
+            }
             player.setPlayerListName(type.getColor()+player.getPlayerListName());
         }
     }
@@ -92,10 +100,14 @@ public class PlayerInfo {
             player.getInventory().clear();
             Bukkit.broadcastMessage(player.getName()+ChatColor.RED+"は亡命に失敗した");
             playerColor.put(player.getUniqueId(),type.getBeenColor());
+            this.battle.scoreboard.getTeam("boumei_team").removeEntry(player.getName());
             this.battle.scoreboard.getTeam(type.getBeenColor()==PlayerType.BLUE?"blue_team":"red_team").addEntry(player.getName());
             player.setPlayerListName(type.getBeenColor().getColor()+player.getPlayerListName());
             if(!isKilled){
                 player.teleport(type.getBeenColor()==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
+            }
+            for(Player p:Bukkit.getOnlinePlayers()){
+                p.setScoreboard(this.battle.scoreboard);
             }
         }
     }

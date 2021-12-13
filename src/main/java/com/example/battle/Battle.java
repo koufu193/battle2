@@ -35,10 +35,11 @@ public class Battle extends JavaPlugin {
     Location red_spawn_location;
     Map<PlayerType,List<Location>> chestData=new HashMap<>();
     UUIDFile file=new UUIDFile(this);
-    BannerEvent event=new BannerEvent(this);
+    BannerEvent event;
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        event=new BannerEvent(this);
         if(!getDataFolder().exists()){
             getDataFolder().mkdir();
         }
@@ -64,6 +65,9 @@ public class Battle extends JavaPlugin {
             file.setData();
             Bukkit.getPluginManager().registerEvents(this.manager,this);
             Bukkit.getPluginManager().registerEvents(this.event,this);
+            for(Player p:Bukkit.getOnlinePlayers()){
+                p.setScoreboard(this.scoreboard);
+            }
             Bukkit.getScheduler().runTaskTimer(this,new Runnable(){
                 PotionEffect kishi=new PotionEffect(PotionEffectType.INCREASE_DAMAGE,90*20,1);
                 PotionEffect sakimori=new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,90*20,1);
@@ -71,11 +75,6 @@ public class Battle extends JavaPlugin {
                 public void run() {
                     for (String str : kishi_sakimori_data.keySet()) {
                         kishi_sakimori_data.get(str).forEach(b -> Bukkit.getPlayer(b).addPotionEffect(str.equals(KISHI_AKASHI_NAME) ? kishi : sakimori));
-                    }
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
                 }
             },0,60*20);
@@ -119,15 +118,15 @@ public class Battle extends JavaPlugin {
                                 ItemMeta meta;
                                 switch (ChatColor.valueOf(args[2])){
                                     case DARK_RED:
-                                        item=new ItemStack(Material.RED_BANNER);
+                                        item=new ItemStack(Material.BLUE_BANNER);
                                         meta=item.getItemMeta();
-                                        meta.setDisplayName(ChatColor.DARK_RED+"アルティオ制圧旗");
+                                        meta.setDisplayName(this.event.RED_BANNER);
                                         item.setItemMeta(meta);
                                         break;
                                     case DARK_BLUE:
                                         item=new ItemStack(Material.RED_BANNER);
                                         meta=item.getItemMeta();
-                                        meta.setDisplayName(ChatColor.DARK_BLUE+"アプサラス制圧旗");
+                                        meta.setDisplayName(this.event.BLUE_BANNER);
                                         item.setItemMeta(meta);
                                         break;
                                     default:
@@ -220,4 +219,6 @@ public class Battle extends JavaPlugin {
     //旗は一本しかさせない
     //無所属で死んだり亡命捨てたらインベントリクリア<-done
     //所属の場合死んだらそのままロスト<-done
+    //刺したチームの色+==○○群が制圧旗を掲げた==
+    //サブタイトル:刺したチームの色+制圧まであとn時間<-nはコンフィグからv
 }

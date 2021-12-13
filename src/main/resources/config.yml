@@ -4,6 +4,8 @@ newWorldName: "world"
 FinishedTeleportWorld: "world_nether"
 #ワールド生成のためのクールダウンの時間
 waitTime: 5
+#時間
+Time: 24
 #場所
 Locations:
   #終わったときにテレポートする場所
@@ -41,3 +43,10 @@ Locations:
       x: 0
       y: 0
       z: 0
+banner:
+  canPlace:
+    xzr: 15
+    yr: 15
+  cantPlace:
+    xzr: 5
+    yr:  8
