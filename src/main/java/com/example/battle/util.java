@@ -13,21 +13,6 @@ public class util {
     public util(Battle battle){
         this.battle=battle;
     }
-    public void makeNewWorld(String worldName){
-        if(Bukkit.getWorld(worldName)!=null){
-            Bukkit.unloadWorld(worldName,true);
-            deleteWorld(Bukkit.getWorld(worldName).getWorldFolder());
-        }
-        Bukkit.createWorld(new WorldCreator(worldName).type(WorldType.NORMAL));
-    }
-    public void deleteWorld(File f){
-        if(f.isDirectory()){
-            for(File file:f.listFiles()){
-                deleteWorld(file);
-            }
-        }
-        f.delete();
-    }
     @Nullable
     public Location getLocationByConfig(FileConfiguration config,String... key){
         String path = "";

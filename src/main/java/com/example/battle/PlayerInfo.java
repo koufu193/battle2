@@ -9,6 +9,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.*;
 
 public class PlayerInfo {
@@ -37,6 +38,7 @@ public class PlayerInfo {
             for(Player p:Bukkit.getOnlinePlayers()){
                 p.setScoreboard(this.battle.scoreboard);
             }
+            this.battle.srv.changeRoll(player.getUniqueId());
         }
     }
     public void boumeiPlayer(Player player){
@@ -54,6 +56,7 @@ public class PlayerInfo {
             }
             playerColor.put(player.getUniqueId(),type.getBoumei());
             Bukkit.broadcastMessage(player.getName()+ChatColor.RED+"が亡命を図った("+(type==PlayerType.BLUE?"アルティオ":"アプサラス")+"チームを目指しています)");
+            this.battle.srv.showText(player.getName()+"が亡命を図った("+(type==PlayerType.BLUE?"アルティオ":"アプサラス")+"チームを目指しています)", Color.RED);
             for(String str:this.battle.kishi_sakimori_data.keySet()){
                 if(this.battle.kishi_sakimori_data.get(str).contains(player.getUniqueId())){
                     this.battle.kishi_sakimori_data.get(str).remove(player.getUniqueId());
@@ -77,6 +80,7 @@ public class PlayerInfo {
             boumeiPlayer(player);
         }else{
             Bukkit.broadcastMessage(player.getName()+ChatColor.GREEN+"は亡命に成功した!");
+            this.battle.srv.showText(player.getName()+"は亡命に成功した!",Color.GREEN);
             PlayerType type=playerColor.get(player.getUniqueId()).getBeenColor().getChangeColor();
             playerColor.put(player.getUniqueId(), type);
             this.battle.scoreboard.getTeam("boumei_team").removeEntry(player.getName());
@@ -86,6 +90,7 @@ public class PlayerInfo {
             }
             Arrays.stream(player.getInventory().getContents()).filter(Objects::nonNull).filter(ItemStack::hasItemMeta).filter(item->item.getItemMeta().getDisplayName().equals(ChatColor.DARK_RED+"アルティオへの亡命書")||item.getItemMeta().getDisplayName().equals(ChatColor.DARK_BLUE+"アプサラスへの亡命書")).forEach(b->player.getInventory().remove(b));
             player.setPlayerListName(type.getColor()+player.getPlayerListName());
+            this.battle.srv.changeRoll(player.getUniqueId());
         }
     }
     public void backColor(Player player,boolean isKilled){
@@ -97,6 +102,7 @@ public class PlayerInfo {
             PlayerType type=playerColor.get(player.getUniqueId());
             player.getInventory().clear();
             Bukkit.broadcastMessage(player.getName()+ChatColor.RED+"は亡命に失敗した");
+            this.battle.srv.showText(player.getName()+"は亡命に失敗した",Color.RED);
             playerColor.put(player.getUniqueId(),type.getBeenColor());
             this.battle.scoreboard.getTeam("boumei_team").removeEntry(player.getName());
             this.battle.scoreboard.getTeam(type.getBeenColor()==PlayerType.BLUE?"blue_team":"red_team").addEntry(player.getName());

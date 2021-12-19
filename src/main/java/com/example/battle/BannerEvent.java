@@ -13,6 +13,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.awt.*;
 import java.util.Arrays;
 
 public class BannerEvent implements Listener {
@@ -78,6 +79,7 @@ public class BannerEvent implements Listener {
             if (e.getBlock().getLocation().distance(BlueBanner.getBlock().getLocation())<=1&&e.getBlock().getType()==Material.RED_BANNER) {
                 Bukkit.getScheduler().cancelTask(blue.getTaskId());
                 Bukkit.broadcastMessage(ChatColor.RED+"アルティオチームの旗が壊された");
+                this.battle.srv.showText("アルティオチームの旗が壊された", Color.RED);
                 blue=null;
                 BlueBanner=null;
                 e.setDropItems(false);
@@ -85,6 +87,7 @@ public class BannerEvent implements Listener {
             }else if(BlueBanner.getBlock().getType()!=Material.RED_BANNER){
                 Bukkit.getScheduler().cancelTask(blue.getTaskId());
                 Bukkit.broadcastMessage(ChatColor.RED+"アルティオチームの旗が壊された");
+                this.battle.srv.showText("アルティオチームの旗が壊された",Color.RED);
                 blue=null;
                 BlueBanner=null;
                 Bukkit.getOnlinePlayers().stream().forEach(b->b.sendTitle(ChatColor.DARK_RED+"==アルティオチームの旗が壊された==","",10,10,10));
@@ -94,6 +97,7 @@ public class BannerEvent implements Listener {
             if (e.getBlock().getLocation().distance(RedBanner.getBlock().getLocation())<=1&&e.getBlock().getType()==Material.BLUE_BANNER) {
                 Bukkit.getScheduler().cancelTask(red.getTaskId());
                 Bukkit.broadcastMessage(ChatColor.RED+"アプサラスチームの旗が壊された");
+                this.battle.srv.showText("アプサラスチームの旗が壊された",Color.RED);
                 red=null;
                 RedBanner=null;
                 e.setDropItems(false);
@@ -101,6 +105,7 @@ public class BannerEvent implements Listener {
             }else if(e.getBlock().getType()!=Material.BLUE_BANNER){
                 Bukkit.getScheduler().cancelTask(red.getTaskId());
                 Bukkit.broadcastMessage(ChatColor.RED+"アプサラスチームの旗が壊された");
+                this.battle.srv.showText("アプサラスチームの旗が壊された",Color.RED);
                 red=null;
                 RedBanner=null;
                 Bukkit.getOnlinePlayers().stream().forEach(b->b.sendTitle(ChatColor.DARK_BLUE+"==アプサラスチームの旗が壊された==","",10,10,10));

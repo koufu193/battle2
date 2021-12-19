@@ -36,9 +36,11 @@ public class Battle extends JavaPlugin {
     Map<PlayerType,List<Location>> chestData=new HashMap<>();
     UUIDFile file=new UUIDFile(this);
     BannerEvent event;
+    DiscordSRV srv;
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        srv=new DiscordSRV(this);
         event=new BannerEvent(this);
         if(!getDataFolder().exists()){
             getDataFolder().mkdir();
@@ -74,10 +76,11 @@ public class Battle extends JavaPlugin {
                 @Override
                 public void run() {
                     for (String str : kishi_sakimori_data.keySet()) {
-                        kishi_sakimori_data.get(str).forEach(b -> Bukkit.getPlayer(b).addPotionEffect(str.equals(KISHI_AKASHI_NAME) ? kishi : sakimori));
+                        kishi_sakimori_data.get(str).stream().filter(b->Bukkit.getPlayer(b)!=null).forEach(b -> Bukkit.getPlayer(b).addPotionEffect(str.equals(KISHI_AKASHI_NAME) ? kishi : sakimori));
                     }
                 }
             },0,60*20);
+            github.scarsz.discordsrv.DiscordSRV.api.subscribe(srv);
         }
     }
 
@@ -172,7 +175,6 @@ public class Battle extends JavaPlugin {
                 }else if(args[0].equals("stop")) {
                     if (isStart.get()) {
                         this.game.finishGame();
-                        Bukkit.getScheduler().runTaskLater(this, bukkitTask -> this.canStart.set(true), this.getConfig().getInt("waitTime") * 20);
                         Bukkit.broadcastMessage(ChatColor.RED + "試合が強制終了されました");
                     } else {
                         sender.sendMessage("試合が始まっていません");

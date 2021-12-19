@@ -11,6 +11,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
+import java.util.UUID;
 
 public class Game {
     Battle battle;
@@ -41,6 +42,11 @@ public class Game {
         Bukkit.getScheduler().cancelTasks(this.battle);
         HandlerList.unregisterAll(this.battle);
         Location location=this.battle.util.getLocationByConfig(this.battle.getConfig(),"Locations","finishedTeleportLocation");
+        for(UUID uuid:this.battle.info.playerColor.keySet()){
+            Player p=Bukkit.getPlayer(uuid);
+            p.setPlayerListName(p.getName());
+        }
+        this.battle.srv.finishGame();
         this.battle.info.playerColor.clear();
         for(String str:this.battle.kishi_sakimori_data.keySet()){
             this.battle.kishi_sakimori_data.get(str).clear();
@@ -55,7 +61,10 @@ public class Game {
             location.setWorld(Bukkit.getWorld(this.battle.getConfig().getString("FinishedTeleportWorld")));
             this.battle.info.playerColor.keySet().forEach(b -> Bukkit.getPlayer(b).teleport(location));
             this.battle.canStart.set(false);
-            this.battle.util.makeNewWorld(this.battle.getConfig().getString("newWorldName"));
+            Bukkit.getScheduler().runTaskLater(this.battle, bukkitTask -> this.battle.canStart.set(true), this.battle.getConfig().getInt("waitTime") * 20);
+        }
+        for(Player p:Bukkit.getOnlinePlayers()){
+            p.teleport(location);
         }
     }
 }
