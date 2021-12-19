@@ -1,5 +1,6 @@
 package com.example.battle;
 
+import github.scarsz.discordsrv.DiscordSRV;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
