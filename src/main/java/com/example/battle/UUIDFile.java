@@ -38,9 +38,11 @@ public class UUIDFile {
                         if(i==1) {
                             this.battle.event.RedBanner = new Location(Bukkit.getWorld(this.battle.util.getWorldName()), Double.parseDouble(data[0]), Double.parseDouble(data[1]), Double.parseDouble(data[2]));
                             this.battle.event.red_banner_timer = new BannerRunnable(data[4], Integer.parseInt(data[3]), this.battle.getConfig().getInt("Time"), ChatColor.valueOf(data[5]), this.battle);
+                            this.battle.event.red=Bukkit.getScheduler().runTaskTimer(this.battle,this.battle.event.red_banner_timer,0,60*60*20);
                         }else{
                             this.battle.event.BlueBanner = new Location(Bukkit.getWorld(this.battle.util.getWorldName()), Double.parseDouble(data[0]), Double.parseDouble(data[1]), Double.parseDouble(data[2]));
                             this.battle.event.blue_banner_timer = new BannerRunnable(data[4], Integer.parseInt(data[3]), this.battle.getConfig().getInt("Time"), ChatColor.valueOf(data[5]), this.battle);
+                            this.battle.event.blue=Bukkit.getScheduler().runTaskTimer(this.battle,this.battle.event.blue_banner_timer,0,60*60*20);
                         }
                     }
                 }

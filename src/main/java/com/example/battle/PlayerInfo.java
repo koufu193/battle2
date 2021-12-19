@@ -9,10 +9,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerInfo {
     final Battle battle;
@@ -87,6 +84,7 @@ public class PlayerInfo {
             for(Player p:Bukkit.getOnlinePlayers()){
                 p.setScoreboard(this.battle.scoreboard);
             }
+            Arrays.stream(player.getInventory().getContents()).filter(Objects::nonNull).filter(ItemStack::hasItemMeta).filter(item->item.getItemMeta().getDisplayName().equals(ChatColor.DARK_RED+"アルティオへの亡命書")||item.getItemMeta().getDisplayName().equals(ChatColor.DARK_BLUE+"アプサラスへの亡命書")).forEach(b->player.getInventory().remove(b));
             player.setPlayerListName(type.getColor()+player.getPlayerListName());
         }
     }

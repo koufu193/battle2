@@ -5,6 +5,7 @@ import net.minecraft.server.v1_16_R3.InventoryEnderChest;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,6 +20,8 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.map.MapCanvas;
+import org.bukkit.map.MapPalette;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
@@ -36,6 +39,7 @@ public class EventManager implements Listener {
             this.battle.info.addPlayer(e.getPlayer());
         }else{
             e.getPlayer().setPlayerListName(type.getColor()+e.getPlayer().getName());
+            e.getPlayer().setScoreboard(this.battle.scoreboard);
         }
     }
     @EventHandler
@@ -52,6 +56,7 @@ public class EventManager implements Listener {
                         if(!type.isBoumei()){
                             if(e.getItem().getItemStack().getItemMeta().getDisplayName().matches(type.getChangeColor().getColor()+".*")){
                                 this.battle.info.boumeiPlayer((Player) e.getEntity());
+                                e.setCancelled(false);
                                 return;
                             }
                         }
@@ -162,6 +167,7 @@ public class EventManager implements Listener {
         PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
         if(type!=null){
             e.setRespawnLocation(type.getBeenColor()==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
+            e.getPlayer().teleport(type.getBeenColor()==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
             //e.getPlayer().teleport(type.getBeenColor()==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
         }
     }

@@ -13,6 +13,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.Arrays;
+
 public class BannerEvent implements Listener {
     Battle battle;
     BannerRunnable red_banner_timer;
@@ -45,13 +47,23 @@ public class BannerEvent implements Listener {
                     e.getPlayer().sendMessage("この地点では旗を置くことができません");
                 }else{
                     if(type==PlayerType.BLUE){
-                        RedBanner=e.getBlock().getLocation();
-                        red_banner_timer=new BannerRunnable("アプサラス",0,battle.getConfig().getInt("Time"),ChatColor.DARK_RED,this.battle);
-                        red=Bukkit.getScheduler().runTaskTimer(this.battle,red_banner_timer,0,60*60*20);
+                        if(red==null) {
+                            RedBanner = e.getBlock().getLocation();
+                            red_banner_timer = new BannerRunnable("アプサラス", 0, battle.getConfig().getInt("Time"), ChatColor.DARK_RED, this.battle);
+                            red = Bukkit.getScheduler().runTaskTimer(this.battle, red_banner_timer, 0, 60 * 60 * 20);
+                        }else{
+                            e.getPlayer().sendMessage("旗はおけません");
+                            e.setCancelled(true);
+                        }
                     }else{
-                        BlueBanner=e.getBlock().getLocation();
-                        blue_banner_timer=new BannerRunnable("アルティオ",0,battle.getConfig().getInt("Time"),ChatColor.DARK_BLUE,this.battle);
-                        blue=Bukkit.getScheduler().runTaskTimer(this.battle,blue_banner_timer,0,60*60*20);
+                        if(blue==null) {
+                            BlueBanner = e.getBlock().getLocation();
+                            blue_banner_timer = new BannerRunnable("アルティオ", 0, battle.getConfig().getInt("Time"), ChatColor.DARK_BLUE, this.battle);
+                            blue = Bukkit.getScheduler().runTaskTimer(this.battle, blue_banner_timer, 0, 60 * 60 * 20);
+                        }else{
+                            e.getPlayer().sendMessage("旗はおけません");
+                            e.setCancelled(true);
+                        }
                     }
                 }
             }else{
@@ -63,20 +75,42 @@ public class BannerEvent implements Listener {
     @EventHandler
     public void breakEvent(BlockBreakEvent e){
         if(BlueBanner!=null) {
-            if (BlueBanner.getBlock().getType() != Material.RED_BANNER) {
+            if (e.getBlock().getLocation().distance(BlueBanner.getBlock().getLocation())<=1&&e.getBlock().getType()==Material.RED_BANNER) {
                 Bukkit.getScheduler().cancelTask(blue.getTaskId());
+                Bukkit.broadcastMessage(ChatColor.RED+"アルティオチームの旗が壊された");
+                blue=null;
+                BlueBanner=null;
+                e.setDropItems(false);
+                Bukkit.getOnlinePlayers().stream().forEach(b->b.sendTitle(ChatColor.DARK_RED+"==アルティオチームの旗が壊された==","",10,10,10));
+            }else if(BlueBanner.getBlock().getType()!=Material.RED_BANNER){
+                Bukkit.getScheduler().cancelTask(blue.getTaskId());
+                Bukkit.broadcastMessage(ChatColor.RED+"アルティオチームの旗が壊された");
+                blue=null;
+                BlueBanner=null;
+                Bukkit.getOnlinePlayers().stream().forEach(b->b.sendTitle(ChatColor.DARK_RED+"==アルティオチームの旗が壊された==","",10,10,10));
             }
         }
         if(RedBanner!=null) {
-            if (RedBanner.getBlock().getType() != Material.BLUE_BANNER) {
+            if (e.getBlock().getLocation().distance(RedBanner.getBlock().getLocation())<=1&&e.getBlock().getType()==Material.BLUE_BANNER) {
                 Bukkit.getScheduler().cancelTask(red.getTaskId());
+                Bukkit.broadcastMessage(ChatColor.RED+"アプサラスチームの旗が壊された");
+                red=null;
+                RedBanner=null;
+                e.setDropItems(false);
+                Bukkit.getOnlinePlayers().stream().forEach(b->b.sendTitle(ChatColor.DARK_BLUE+"==アプサラスチームの旗が壊された==","",10,10,10));
+            }else if(e.getBlock().getType()!=Material.BLUE_BANNER){
+                Bukkit.getScheduler().cancelTask(red.getTaskId());
+                Bukkit.broadcastMessage(ChatColor.RED+"アプサラスチームの旗が壊された");
+                red=null;
+                RedBanner=null;
+                Bukkit.getOnlinePlayers().stream().forEach(b->b.sendTitle(ChatColor.DARK_BLUE+"==アプサラスチームの旗が壊された==","",10,10,10));
             }
         }
     }
     private boolean canPlace(Location spawnLocation,Location location){
         double x=Math.abs(location.getX()-spawnLocation.getX());
-        double y=Math.abs(location.getX()-spawnLocation.getY());
-        double z=Math.abs(location.getX()-spawnLocation.getZ());
-        return x<=canXZr&&y<=canYr&&z<=canXZr&&cantXZr<x&&cantYr<y&&cantXZr<z;
+        double y=Math.abs(location.getY()-spawnLocation.getY());
+        double z=Math.abs(location.getZ()-spawnLocation.getZ());
+        return x<=canXZr&&y<=canYr&&z<=canXZr&&(cantXZr<x||cantYr<y||cantXZr<z);
     }
 }

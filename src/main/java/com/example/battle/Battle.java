@@ -87,7 +87,7 @@ public class Battle extends JavaPlugin {
             if (args.length==3) {
                 if(args[0].equals("give")) {
                     if (sender instanceof BlockCommandSender) {
-                        for (Entity entity:((BlockCommandSender) sender).getBlock().getLocation().getWorld().getNearbyEntities(((BlockCommandSender) sender).getBlock().getLocation(),2,2,2)){
+                        for (Entity entity:((BlockCommandSender) sender).getBlock().getLocation().getWorld().getNearbyEntities(((BlockCommandSender) sender).getBlock().getLocation(),5,3,5)){
                             if (!(entity instanceof Player)) {
                                 continue;
                             }
@@ -189,8 +189,6 @@ public class Battle extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        saveConfig();
-        reloadConfig();
         if(isStart.get()){
             file.saveData();
         }
