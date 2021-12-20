@@ -27,7 +27,7 @@ public class BannerRunnable implements Runnable {
         for(Player p: Bukkit.getOnlinePlayers()){
             if(now.get()==0) {
                 Bukkit.broadcastMessage(color+title+"群が制圧旗を置いた");
-                this.battle.srv.showText(title+"群が制圧旗を置いた", Color.RED);
+                this.battle.srv.showText(title+"群が制圧旗を置いた", title.equals("アルティオ")?Color.RED:Color.BLUE);
                 p.sendTitle(color + "=="+title+"群が制圧旗を掲げた==", color + "制圧まであと" + (max.get() - now.get()) + "時間",10,10,10);
             }else if(now.get()+1!=max.get()) {
                 p.sendTitle(color + title + "チーム、制圧まであと" + (max.get() - now.get()) + "時間","", 10, 10, 10);

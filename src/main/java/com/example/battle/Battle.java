@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -87,7 +88,7 @@ public class Battle extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(command.getName().equalsIgnoreCase("battle")){
-            if (args.length==3) {
+            if (3<=args.length) {
                 if(args[0].equals("give")) {
                     if (sender instanceof BlockCommandSender) {
                         for (Entity entity:((BlockCommandSender) sender).getBlock().getLocation().getWorld().getNearbyEntities(((BlockCommandSender) sender).getBlock().getLocation(),5,3,5)){
@@ -138,7 +139,12 @@ public class Battle extends JavaPlugin {
                                 entity.getWorld().dropItem(entity.getLocation(),item);
                             }
                         }
-
+                    }else if(sender instanceof Player){
+                        ItemStack item=new ItemStack(Material.valueOf(args[1]));
+                        ItemMeta meta=item.getItemMeta();
+                        meta.setDisplayName(ChatColor.valueOf(args[2])+args[3]);
+                        item.setItemMeta(meta);
+                        ((Player)sender).getInventory().addItem(item);
                     }
                     return false;
                 }
@@ -156,6 +162,8 @@ public class Battle extends JavaPlugin {
                 }else if(args[0].equals("reload")) {
                     sender.sendMessage("リロード開始");
                     onDisable();
+                    Bukkit.getScheduler().cancelTasks(this);
+                    HandlerList.unregisterAll(this);
                     onEnable();
                     sender.sendMessage("リロード終了");
                     return true;

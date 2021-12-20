@@ -5,8 +5,10 @@ import net.minecraft.server.v1_16_R3.InventoryEnderChest;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -70,6 +72,19 @@ public class EventManager implements Listener {
                 }
             } else {
                 e.setCancelled(true);
+            }
+        }
+    }
+    @EventHandler
+    public void InventoryClickEvent(InventoryClickEvent e){
+        if(e.getCurrentItem()!=null){
+            if(e.getCurrentItem().hasItemMeta()){
+                PlayerType type=this.battle.info.getColorByPlayerName(e.getWhoClicked().getUniqueId());
+                if(type!=null) {
+                    if (e.getCurrentItem().getItemMeta().getDisplayName().equals(type.getChangeColor().getBeenColor()+this.battle.SAKIMORI_AKASHI_NAME)||e.getCurrentItem().getItemMeta().getDisplayName().equals(type.getChangeColor().getBeenColor()+this.battle.KISHI_AKASHI_NAME)){
+                        e.setCancelled(true);
+                    }
+                }
             }
         }
     }
@@ -144,11 +159,24 @@ public class EventManager implements Listener {
     }
     @EventHandler
     public void hurtPlayerEvent(EntityDamageByEntityEvent e){
-        PlayerType type=this.battle.info.getColorByPlayerName(e.getEntity().getUniqueId());
-        PlayerType typeDamage=this.battle.info.getColorByPlayerName(e.getDamager().getUniqueId());
-        if(type!=null&&typeDamage!=null){
-            if(!type.isBoumei()&&!typeDamage.isBoumei()&&type==typeDamage){
-                e.setCancelled(true);
+        if(e.getEntity() instanceof Player) {
+            PlayerType type = this.battle.info.getColorByPlayerName(e.getEntity().getUniqueId());
+            PlayerType typeDamage;
+            if(e.getDamager() instanceof Player) {
+                typeDamage=this.battle.info.getColorByPlayerName(e.getDamager().getUniqueId());
+            }else if(e.getDamager() instanceof Projectile){
+                if(((Projectile)e.getDamager()).getShooter() instanceof Player){
+                    typeDamage=this.battle.info.getColorByPlayerName(((Player)((Projectile)e.getDamager()).getShooter()).getUniqueId());
+                }else{
+                    return;
+                }
+            }else{
+                return;
+            }
+            if (type != null && typeDamage != null) {
+                if (!type.isBoumei() && !typeDamage.isBoumei() && type == typeDamage) {
+                    e.setCancelled(true);
+                }
             }
         }
     }

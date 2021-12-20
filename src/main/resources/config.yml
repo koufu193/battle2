@@ -1,9 +1,5 @@
 #新しくワールド作るときの名まえ
 newWorldName: "world"
-#終わったときにテレポートするワールド
-FinishedTeleportWorld: "world_nether"
-#ワールド生成のためのクールダウンの時間
-waitTime: 5
 #時間
 Time: 24
 #場所

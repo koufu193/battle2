@@ -44,7 +44,9 @@ public class Game {
         Location location=this.battle.util.getLocationByConfig(this.battle.getConfig(),"Locations","finishedTeleportLocation");
         for(UUID uuid:this.battle.info.playerColor.keySet()){
             Player p=Bukkit.getPlayer(uuid);
-            p.setPlayerListName(p.getName());
+            if(p!=null) {
+                p.setPlayerListName(p.getName());
+            }
         }
         this.battle.srv.finishGame();
         this.battle.info.playerColor.clear();
@@ -54,15 +56,7 @@ public class Game {
         this.battle.isStart.set(false);
         new File(this.battle.getDataFolder(),"banner.txt").delete();
         new File(this.battle.getDataFolder(),"save.txt").delete();
-        if(location==null){
-            this.battle.getLogger().warning("テレポート先が見つかりません");
-            throw new IllegalArgumentException("configの項目が足りないです<-Locations.finishedTeleportLocation");
-        }else {
-            location.setWorld(Bukkit.getWorld(this.battle.getConfig().getString("FinishedTeleportWorld")));
-            this.battle.info.playerColor.keySet().forEach(b -> Bukkit.getPlayer(b).teleport(location));
-            this.battle.canStart.set(false);
-            Bukkit.getScheduler().runTaskLater(this.battle, bukkitTask -> this.battle.canStart.set(true), this.battle.getConfig().getInt("waitTime") * 20);
-        }
+        this.battle.canStart.set(true);
         for(Player p:Bukkit.getOnlinePlayers()){
             p.teleport(location);
         }

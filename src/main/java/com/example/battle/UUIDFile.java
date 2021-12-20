@@ -35,7 +35,7 @@ public class UUIDFile {
                     line=reader.readLine();
                     if(line!=null&&!line.equals("null")) {
                         String[] data = line.split(" ", 6);
-                        if(i==1) {
+                        if(i==0) {
                             this.battle.event.RedBanner = new Location(Bukkit.getWorld(this.battle.util.getWorldName()), Double.parseDouble(data[0]), Double.parseDouble(data[1]), Double.parseDouble(data[2]));
                             this.battle.event.red_banner_timer = new BannerRunnable(data[4], Integer.parseInt(data[3]), this.battle.getConfig().getInt("Time"), ChatColor.valueOf(data[5]), this.battle);
                             this.battle.event.red=Bukkit.getScheduler().runTaskTimer(this.battle,this.battle.event.red_banner_timer,0,60*60*20);
@@ -52,7 +52,7 @@ public class UUIDFile {
         }
     }
     public void saveData() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(this.battle.getDataFolder(),"save.txt")))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(this.battle.getDataFolder(),"save.txt"),false))) {
             for (UUID uuid : this.battle.info.playerColor.keySet()) {
                 String type = null;
                 for (String key : this.battle.kishi_sakimori_data.keySet()) {
@@ -66,14 +66,14 @@ public class UUIDFile {
         }catch (IOException e){
             e.printStackTrace();
         }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(this.battle.getDataFolder(),"banner.txt")))) {
-            if(this.battle.event.RedBanner!=null){
-                writer.write(this.battle.event.RedBanner.getX()+" "+this.battle.event.RedBanner.getY()+" "+this.battle.event.RedBanner.getZ()+" "+this.battle.event.red_banner_timer.now+" "+this.battle.event.red_banner_timer.title+" "+this.battle.event.red_banner_timer.color);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(this.battle.getDataFolder(),"banner.txt"),false))) {
+            if(this.battle.event.red!=null){
+                writer.write(this.battle.event.RedBanner.getX()+" "+this.battle.event.RedBanner.getY()+" "+this.battle.event.RedBanner.getZ()+" "+this.battle.event.red_banner_timer.now+" "+this.battle.event.red_banner_timer.title+" DARK_RED");
             }else{
                 writer.write("null"+System.lineSeparator());
             }
-            if(this.battle.event.RedBanner!=null){
-                writer.write(this.battle.event.BlueBanner.getX()+" "+this.battle.event.BlueBanner.getY()+" "+this.battle.event.BlueBanner.getZ()+" "+this.battle.event.blue_banner_timer.now+" "+this.battle.event.blue_banner_timer.title+" "+this.battle.event.blue_banner_timer.color);
+            if(this.battle.event.blue!=null){
+                writer.write(this.battle.event.BlueBanner.getX()+" "+this.battle.event.BlueBanner.getY()+" "+this.battle.event.BlueBanner.getZ()+" "+this.battle.event.blue_banner_timer.now+" "+this.battle.event.blue_banner_timer.title+" DARK_RED");
             }else{
                 writer.write("null"+System.lineSeparator());
             }
