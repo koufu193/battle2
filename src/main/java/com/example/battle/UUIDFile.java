@@ -68,12 +68,12 @@ public class UUIDFile {
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(this.battle.getDataFolder(),"banner.txt"),false))) {
             if(this.battle.event.red!=null){
-                writer.write(this.battle.event.RedBanner.getX()+" "+this.battle.event.RedBanner.getY()+" "+this.battle.event.RedBanner.getZ()+" "+this.battle.event.red_banner_timer.now+" "+this.battle.event.red_banner_timer.title+" DARK_RED");
+                writer.write(this.battle.event.RedBanner.getX()+" "+this.battle.event.RedBanner.getY()+" "+this.battle.event.RedBanner.getZ()+" "+this.battle.event.red_banner_timer.now+" "+this.battle.event.red_banner_timer.title+" RED");
             }else{
                 writer.write("null"+System.lineSeparator());
             }
             if(this.battle.event.blue!=null){
-                writer.write(this.battle.event.BlueBanner.getX()+" "+this.battle.event.BlueBanner.getY()+" "+this.battle.event.BlueBanner.getZ()+" "+this.battle.event.blue_banner_timer.now+" "+this.battle.event.blue_banner_timer.title+" DARK_RED");
+                writer.write(this.battle.event.BlueBanner.getX()+" "+this.battle.event.BlueBanner.getY()+" "+this.battle.event.BlueBanner.getZ()+" "+this.battle.event.blue_banner_timer.now+" "+this.battle.event.blue_banner_timer.title+" RED");
             }else{
                 writer.write("null"+System.lineSeparator());
             }

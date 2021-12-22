@@ -53,10 +53,10 @@ public class DiscordSRV {
             if (user != null) {
                 Guild guild = github.scarsz.discordsrv.DiscordSRV.getPlugin().getMainGuild();
                 Member member = guild.getMember(user);
-                if (type.getColor() == ChatColor.DARK_RED) {
+                if (type.getColor() == ChatColor.RED) {
                     guild.addRoleToMember(member, guild.getRoleById("906676229892108299")).queue();
                     guild.removeRoleFromMember(member, guild.getRoleById("906676570234716260")).queue();
-                } else if (type.getColor() == ChatColor.DARK_BLUE) {
+                } else if (type.getColor() == ChatColor.BLUE) {
                     guild.addRoleToMember(member, guild.getRoleById("906676570234716260")).queue();
                     guild.removeRoleFromMember(member, guild.getRoleById("906676229892108299")).queue();
                 }

@@ -5,10 +5,10 @@ import org.bukkit.ChatColor;
 public enum PlayerType {
     BOUMEI_BLUE,BOUMEI_RED,BLUE,RED;
     public ChatColor getColor(){
-        if(this==BOUMEI_BLUE||this==BOUMEI_RED){
+        if(this.isBoumei()){
             return ChatColor.WHITE;
         }
-        return this==BLUE?ChatColor.DARK_BLUE:ChatColor.DARK_RED;
+        return this==BLUE?ChatColor.BLUE:ChatColor.RED;
     }
     public PlayerType getBeenColor(){
         if(this==BOUMEI_BLUE){

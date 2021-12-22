@@ -32,7 +32,7 @@ public class PlayerInfo {
         } else {
             PlayerType type=getColor();
             playerColor.put(player.getUniqueId(), type);
-            this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").addEntry(player.getName());
+            this.battle.scoreboard.getTeam(type.getColor()==ChatColor.BLUE?"blue_team":"red_team").addEntry(player.getName());
             player.setPlayerListName(type.getColor()+player.getPlayerListName());
             player.teleport(type==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
             for(Player p:Bukkit.getOnlinePlayers()){
@@ -49,7 +49,7 @@ public class PlayerInfo {
         }else{
             player.setPlayerListName(player.getName());
             PlayerType type=playerColor.get(player.getUniqueId());
-            this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"blue_team":"red_team").removeEntry(player.getName());
+            this.battle.scoreboard.getTeam(type.getColor()==ChatColor.BLUE?"blue_team":"red_team").removeEntry(player.getName());
             this.battle.scoreboard.getTeam("boumei_team").addEntry(player.getName());
             for(Player p:Bukkit.getOnlinePlayers()){
                 p.setScoreboard(this.battle.scoreboard);
@@ -84,11 +84,11 @@ public class PlayerInfo {
             PlayerType type=playerColor.get(player.getUniqueId()).getBeenColor().getChangeColor();
             playerColor.put(player.getUniqueId(), type);
             this.battle.scoreboard.getTeam("boumei_team").removeEntry(player.getName());
-            this.battle.scoreboard.getTeam(type.getColor()==ChatColor.DARK_BLUE?"red_team":"blue_team").addEntry(player.getName());
+            this.battle.scoreboard.getTeam(type.getColor()==ChatColor.BLUE?"red_team":"blue_team").addEntry(player.getName());
             for(Player p:Bukkit.getOnlinePlayers()){
                 p.setScoreboard(this.battle.scoreboard);
             }
-            Arrays.stream(player.getInventory().getContents()).filter(Objects::nonNull).filter(ItemStack::hasItemMeta).filter(item->item.getItemMeta().getDisplayName().equals(ChatColor.DARK_RED+"アルティオへの亡命書")||item.getItemMeta().getDisplayName().equals(ChatColor.DARK_BLUE+"アプサラスへの亡命書")).forEach(b->player.getInventory().remove(b));
+            Arrays.stream(player.getInventory().getContents()).filter(Objects::nonNull).filter(ItemStack::hasItemMeta).filter(item->item.getItemMeta().getDisplayName().equals(ChatColor.RED+"アルティオへの亡命書")||item.getItemMeta().getDisplayName().equals(ChatColor.BLUE+"アプサラスへの亡命書")).forEach(b->player.getInventory().remove(b));
             player.setPlayerListName(type.getColor()+player.getPlayerListName());
             this.battle.srv.changeRoll(player.getUniqueId());
         }

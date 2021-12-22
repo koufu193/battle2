@@ -61,9 +61,10 @@ public class Battle extends JavaPlugin {
         kishi_sakimori_data.put(KISHI_AKASHI_NAME,new HashSet<>());
         kishi_sakimori_data.put(SAKIMORI_AKASHI_NAME,new HashSet<>());
         scoreboard=Bukkit.getScoreboardManager().getNewScoreboard();
-        scoreboard.registerNewTeam("red_team").setPrefix(ChatColor.DARK_RED.toString());
-        scoreboard.registerNewTeam("blue_team").setPrefix(ChatColor.DARK_BLUE.toString());
+        scoreboard.registerNewTeam("red_team").setPrefix(ChatColor.RED.toString());
+        scoreboard.registerNewTeam("blue_team").setPrefix(ChatColor.BLUE.toString());
         scoreboard.registerNewTeam("boumei_team").setPrefix(ChatColor.WHITE.toString());
+        github.scarsz.discordsrv.DiscordSRV.api.subscribe(srv);
         if(file.isStarted()){
             file.setData();
             Bukkit.getPluginManager().registerEvents(this.manager,this);
@@ -81,7 +82,6 @@ public class Battle extends JavaPlugin {
                     }
                 }
             },0,60*20);
-            github.scarsz.discordsrv.DiscordSRV.api.subscribe(srv);
         }
     }
 
@@ -110,10 +110,10 @@ public class Battle extends JavaPlugin {
                             } else if (args[1].equals("boumei")) {
                                 ItemStack item = new ItemStack(Material.PAPER);
                                 ItemMeta meta = item.getItemMeta();
-                                if (ChatColor.valueOf(args[2])==ChatColor.DARK_RED) {
-                                    meta.setDisplayName(ChatColor.DARK_RED+"アルティオへの亡命書");
-                                } else if (ChatColor.valueOf(args[2])==ChatColor.DARK_BLUE) {
-                                    meta.setDisplayName(ChatColor.DARK_BLUE+"アプサラスへの亡命書");
+                                if (ChatColor.valueOf(args[2])==ChatColor.RED) {
+                                    meta.setDisplayName(ChatColor.RED+"アルティオへの亡命書");
+                                } else if (ChatColor.valueOf(args[2])==ChatColor.BLUE) {
+                                    meta.setDisplayName(ChatColor.BLUE+"アプサラスへの亡命書");
                                 }
                                 item.setItemMeta(meta);
                                 entity.getWorld().dropItem(entity.getLocation(), item);
@@ -121,13 +121,13 @@ public class Battle extends JavaPlugin {
                                 ItemStack item;
                                 ItemMeta meta;
                                 switch (ChatColor.valueOf(args[2])){
-                                    case DARK_RED:
+                                    case RED:
                                         item=new ItemStack(Material.BLUE_BANNER);
                                         meta=item.getItemMeta();
                                         meta.setDisplayName(this.event.RED_BANNER);
                                         item.setItemMeta(meta);
                                         break;
-                                    case DARK_BLUE:
+                                    case BLUE:
                                         item=new ItemStack(Material.RED_BANNER);
                                         meta=item.getItemMeta();
                                         meta.setDisplayName(this.event.BLUE_BANNER);
@@ -207,15 +207,15 @@ public class Battle extends JavaPlugin {
     //4000 65 0 <-red spawn
     //20x±10x20以下は旗置けない
     //30×±15x30以下で旗置ける
-    //騎士の証や防人の証＜＝dark red or dark blue
+    //騎士の証や防人の証＜＝red or blue
     //騎士:攻撃力増加レベル1 <= done
     //防人:耐性レベル1 <= done
     //エフェクト:10秒ごとぐらいに証を持っている人に対応するエフェクトだす(12秒ごと)<=done
     //↑初めはイベントで証をゲットしたときにエフェクト出す(12秒)<-done
-    //アプサラスへの亡命書(青)<-dark blue<-done
-    //アルティオへの亡命書(赤)<-dark red<-done
-    //アプサラス制圧旗(青色の旗)<-dark blue
-    //アルティオ制圧旗(赤色の旗),-dark red
+    //アプサラスへの亡命書(青)<-blue<-done
+    //アルティオへの亡命書(赤)<-red<-done
+    //アプサラス制圧旗(青色の旗)<-blue
+    //アルティオ制圧旗(赤色の旗)<-red
     //おかれたら旗は1時間ごとにアナウンス、24時間経過で終了
     //()は除く
     //制圧を示す制圧旗が立てられ○○時間が経過しました
