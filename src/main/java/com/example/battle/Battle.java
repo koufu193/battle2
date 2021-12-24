@@ -60,7 +60,7 @@ public class Battle extends JavaPlugin {
         red_spawn_location=util.getLocationByConfig(getConfig(),"Locations","redLocation");
         kishi_sakimori_data.put(KISHI_AKASHI_NAME,new HashSet<>());
         kishi_sakimori_data.put(SAKIMORI_AKASHI_NAME,new HashSet<>());
-        scoreboard=Bukkit.getScoreboardManager().getNewScoreboard();
+        scoreboard=Bukkit.getScoreboardManager().getMainScoreboard();
         scoreboard.registerNewTeam("red_team").setPrefix(ChatColor.RED.toString());
         scoreboard.registerNewTeam("blue_team").setPrefix(ChatColor.BLUE.toString());
         scoreboard.registerNewTeam("boumei_team").setPrefix(ChatColor.WHITE.toString());

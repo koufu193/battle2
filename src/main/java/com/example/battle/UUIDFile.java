@@ -21,7 +21,9 @@ public class UUIDFile {
                 while((line=reader.readLine())!=null){
                     String[] data=line.split(" ",3);
                     UUID uuid=UUID.fromString(data[0]);
-                    this.battle.info.playerColor.put(uuid,PlayerType.valueOf(data[1]));
+                    PlayerType type=PlayerType.valueOf(data[1]);
+                    this.battle.info.playerColor.put(uuid,type);
+                    this.battle.scoreboard.getTeam((type==PlayerType.BLUE?"blue":type==PlayerType.RED?"red":"boumei")+"_team").addEntry(Bukkit.getPlayer(uuid).getName());
                     if(!data[2].equals("none")){
                         this.battle.kishi_sakimori_data.get(data[2]).add(uuid);
                     }

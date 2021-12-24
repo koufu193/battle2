@@ -209,15 +209,24 @@ public class EventManager implements Listener {
         }
     }
     @EventHandler
+    public void ChatEvent(AsyncPlayerChatEvent e){
+        if(this.battle.isStart.get()){
+            PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
+            if(type!=null&&!type.isBoumei()) {
+                e.setFormat(type.getColor()+"%s"+ChatColor.RESET+":%s");
+            }
+        }
+    }
+    @EventHandler
     public void explodeEvent(EntityExplodeEvent e){
         e.blockList().removeIf(b->b.hasMetadata("MAMORI"));
     }
     @EventHandler
     public void deathEvent(PlayerDeathEvent e){
-        if(this.battle.info.getColorByPlayerName(e.getEntity().getUniqueId()).isBoumei()){
+        if(this.battle.info.getColorByPlayerName(e.getEntity().getUniqueId()).isBoumei()) {
             e.setKeepInventory(true);
             e.getEntity().getInventory().clear();
-            this.battle.info.backColor(e.getEntity(),true);
+            this.battle.info.backColor(e.getEntity(), true);
         }
     }
 }

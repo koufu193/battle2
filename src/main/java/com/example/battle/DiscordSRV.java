@@ -38,10 +38,10 @@ public class DiscordSRV {
         if(e.getMessage().getContentDisplay().equals("k/info")){
             if(this.battle.isStart.get()) {
                 MessageEmbed embed = new EmbedBuilder().setColor(Color.WHITE).setDescription("アルティオチーム:" + (this.battle.event.red == null ? "旗はまだ刺されていません" : "残り時間" + (this.battle.event.red_banner_timer.max.get() - this.battle.event.red_banner_timer.now.get()) + "時間") + "\n" + "アプサラスチーム:" + (this.battle.event.blue == null ? "旗はまだ刺されていません" : "残り時間" + (this.battle.event.blue_banner_timer.max.get() - this.battle.event.blue_banner_timer.now.get()) + "時間")).build();
-                e.getChannel().sendMessageEmbeds(embed).queue();
+                e.getMessage().replyEmbeds(embed).queue();
             }else{
                 MessageEmbed embed=new EmbedBuilder().setColor(Color.WHITE).setDescription("試合はまだ始まっていません").build();
-                e.getChannel().sendMessageEmbeds(embed).queue();
+                e.getMessage().replyEmbeds(embed).queue();
             }
         }
     }
