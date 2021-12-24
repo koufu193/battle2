@@ -65,22 +65,19 @@ public class Battle extends JavaPlugin {
         github.scarsz.discordsrv.DiscordSRV.api.subscribe(srv);
         try{
             Team red = scoreboard.registerNewTeam("red_team");
-            red.setPrefix(ChatColor.RED.toString());
-            red.setSuffix(ChatColor.RESET.toString());
+            red.setColor(ChatColor.RED);
         }catch (IllegalArgumentException ignored){
 
         }
         try {
             Team blue = scoreboard.registerNewTeam("blue_team");
-            blue.setPrefix(ChatColor.BLUE.toString());
-            blue.setSuffix(ChatColor.RESET.toString());
+            blue.setColor(ChatColor.BLUE);
         }catch (IllegalArgumentException ignored) {
 
         }
         try {
             Team boumei = scoreboard.registerNewTeam("boumei_team");
-            boumei.setPrefix(ChatColor.WHITE.toString());
-            boumei.setSuffix(ChatColor.RESET.toString());
+            boumei.setColor(ChatColor.WHITE);
         }catch (IllegalArgumentException ignored){
 
         }

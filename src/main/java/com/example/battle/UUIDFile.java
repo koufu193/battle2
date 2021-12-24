@@ -3,6 +3,7 @@ package com.example.battle;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.io.*;
 import java.util.UUID;
@@ -21,11 +22,14 @@ public class UUIDFile {
                 while((line=reader.readLine())!=null){
                     String[] data=line.split(" ",3);
                     UUID uuid=UUID.fromString(data[0]);
-                    PlayerType type=PlayerType.valueOf(data[1]);
-                    this.battle.info.playerColor.put(uuid,type);
-                    this.battle.scoreboard.getTeam((type==PlayerType.BLUE?"blue":type==PlayerType.RED?"red":"boumei")+"_team").addEntry(Bukkit.getPlayer(uuid).getName());
-                    if(!data[2].equals("none")){
-                        this.battle.kishi_sakimori_data.get(data[2]).add(uuid);
+                    Player p=Bukkit.getPlayer(uuid);
+                    if(p!=null) {
+                        PlayerType type = PlayerType.valueOf(data[1]);
+                        this.battle.info.playerColor.put(uuid, type);
+                        this.battle.scoreboard.getTeam((type == PlayerType.BLUE ? "blue" : type == PlayerType.RED ? "red" : "boumei") + "_team").addEntry(p.getName());
+                        if (!data[2].equals("none")) {
+                            this.battle.kishi_sakimori_data.get(data[2]).add(uuid);
+                        }
                     }
                 }
             }catch (IOException e){
