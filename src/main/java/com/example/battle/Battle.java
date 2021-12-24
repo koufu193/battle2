@@ -17,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -61,10 +62,28 @@ public class Battle extends JavaPlugin {
         kishi_sakimori_data.put(KISHI_AKASHI_NAME,new HashSet<>());
         kishi_sakimori_data.put(SAKIMORI_AKASHI_NAME,new HashSet<>());
         scoreboard=Bukkit.getScoreboardManager().getMainScoreboard();
-        scoreboard.registerNewTeam("red_team").setPrefix(ChatColor.RED.toString());
-        scoreboard.registerNewTeam("blue_team").setPrefix(ChatColor.BLUE.toString());
-        scoreboard.registerNewTeam("boumei_team").setPrefix(ChatColor.WHITE.toString());
         github.scarsz.discordsrv.DiscordSRV.api.subscribe(srv);
+        try{
+            Team red = scoreboard.registerNewTeam("red_team");
+            red.setPrefix(ChatColor.RED.toString());
+            red.setSuffix(ChatColor.RESET.toString());
+        }catch (IllegalArgumentException ignored){
+
+        }
+        try {
+            Team blue = scoreboard.registerNewTeam("blue_team");
+            blue.setPrefix(ChatColor.BLUE.toString());
+            blue.setSuffix(ChatColor.RESET.toString());
+        }catch (IllegalArgumentException ignored) {
+
+        }
+        try {
+            Team boumei = scoreboard.registerNewTeam("boumei_team");
+            boumei.setPrefix(ChatColor.WHITE.toString());
+            boumei.setSuffix(ChatColor.RESET.toString());
+        }catch (IllegalArgumentException ignored){
+
+        }
         if(file.isStarted()){
             file.setData();
             Bukkit.getPluginManager().registerEvents(this.manager,this);
