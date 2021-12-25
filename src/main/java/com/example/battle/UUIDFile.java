@@ -3,6 +3,7 @@ package com.example.battle;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.io.*;
@@ -22,7 +23,7 @@ public class UUIDFile {
                 while((line=reader.readLine())!=null){
                     String[] data=line.split(" ",3);
                     UUID uuid=UUID.fromString(data[0]);
-                    Player p=Bukkit.getPlayer(uuid);
+                    OfflinePlayer p=Bukkit.getOfflinePlayer(uuid);
                     if(p!=null) {
                         PlayerType type = PlayerType.valueOf(data[1]);
                         this.battle.info.playerColor.put(uuid, type);
