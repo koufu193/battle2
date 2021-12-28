@@ -84,7 +84,7 @@ public class PlayerInfo {
             PlayerType type=playerColor.get(player.getUniqueId()).getBeenColor().getChangeColor();
             playerColor.put(player.getUniqueId(), type);
             this.battle.scoreboard.getTeam("boumei_team").removeEntry(player.getName());
-            this.battle.scoreboard.getTeam(type.getColor()==ChatColor.BLUE?"red_team":"blue_team").addEntry(player.getName());
+            this.battle.scoreboard.getTeam(type.getColor()==ChatColor.BLUE?"blue_team":"red_team").addEntry(player.getName());
             for(Player p:Bukkit.getOnlinePlayers()){
                 p.setScoreboard(this.battle.scoreboard);
             }

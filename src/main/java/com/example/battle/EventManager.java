@@ -28,6 +28,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 public class EventManager implements Listener {
     Battle battle;
@@ -42,6 +43,21 @@ public class EventManager implements Listener {
         }else{
             e.getPlayer().setPlayerListName(type.getColor()+e.getPlayer().getName());
             e.getPlayer().setScoreboard(this.battle.scoreboard);
+        }
+    }
+    @EventHandler
+    public void ChestEvent(InventoryOpenEvent e){
+        if(e.getInventory().getHolder() instanceof Chest){
+            PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
+            if(type!=null) {
+                List<Location> locationList = this.battle.chestData.get(type.getBeenColor().getChangeColor());
+                Location location=((Chest) e.getInventory().getHolder()).getBlock().getLocation();
+                if(locationList.stream().anyMatch(b->location.equals(b))){
+                    e.setCancelled(true);
+                }else if(type.isBoumei()&&this.battle.chestData.get(type.getBeenColor()).stream().anyMatch(b->location.equals(b))){
+                    e.setCancelled(true);
+                }
+            }
         }
     }
     @EventHandler
@@ -202,9 +218,11 @@ public class EventManager implements Listener {
     @EventHandler
     public void RespawnEvent(PlayerRespawnEvent e){
         PlayerType type=this.battle.info.getColorByPlayerName(e.getPlayer().getUniqueId());
-        if(type!=null&&!e.isBedSpawn()&&!e.isAnchorSpawn()){
-            e.setRespawnLocation(type.getBeenColor()==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
-            e.getPlayer().teleport(type.getBeenColor()==PlayerType.BLUE?this.battle.blue_spawn_location:this.battle.red_spawn_location);
+        if(type!=null) {
+            if ((!e.isBedSpawn() && !e.isAnchorSpawn())||type.isBoumei()) {
+                e.setRespawnLocation(type.getBeenColor() == PlayerType.BLUE ? this.battle.blue_spawn_location : this.battle.red_spawn_location);
+                e.getPlayer().teleport(type.getBeenColor() == PlayerType.BLUE ? this.battle.blue_spawn_location : this.battle.red_spawn_location);
+            }
         }
     }
     @EventHandler
